@@ -97,6 +97,11 @@
 \makeindex
 \makeglossaries
 
+\usepackage{minted}
+\usepackage{tikz}
+\usetikzlibrary{snakes,arrows,shapes}
+\usepackage[pdf]{graphviz}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Incipit
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -116,6 +121,7 @@
 \mainmatter
 
   \include{Sources/Introduction}
+  \include{Sources/Technology}
 
 % This ensures that the subsequent sections are being included as root
 % items in the bookmark structure of your PDF reader.

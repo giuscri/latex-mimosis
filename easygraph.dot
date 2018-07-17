@@ -1,0 +1,5 @@
+digraph easygraph {
+  rankdir=LR;
+  a -> add;
+  b -> add;
+}
