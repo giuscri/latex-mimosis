@@ -1,4 +1,4 @@
-digraph easygraph {
+digraph G {
   rankdir=LR;
   a -> add;
   b -> add;

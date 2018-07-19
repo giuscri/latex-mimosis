@@ -22,7 +22,7 @@ distributed and parallel computations. While this \emph{paradigm} makes
 TensorFlow suitable even for research and production environments, it
 can be quite daunting to use when tinkering. In fact, computational
 graphs are built and only later executed. This is counter-intuitive at
-first. In the following example,
+first. For example, in the following snippet of code
 
 \begin{minted}{python}
   >>> import tensorflow as tf
@@ -35,25 +35,27 @@ first. In the following example,
 it contains a reference to a node of the computational graph (which
 will always output 42). In general until you don't run the
 computational graph it's hard to determine what's going to be the value
-of a tensor. This is slowing down exploratory analysis.
+of a tensor. That's slowing down exploratory analysis.
 
 \subsection{About computational graphs}
 \label{subsec:computational-graph}
 
-TensorFlow computational graphs are an important part of the framework.
-A computational graph is a directed graph representing a computation
-involving tensors. A tensor in TensorFlow is a multi-dimensional array:
-it can be a scalar, a matrix, a batch of RGB images (a 4D vector), ...
-Each node represents an operation on tensors while edges represent
-tensors.
+TensorFlow computational graphs are a fundamental part of the
+framework. A computational graph is a directed graph representing a
+computation involving tensors. A tensor in TensorFlow is a
+multi-dimensional array: it can be a scalar, a matrix, a batch of RGB
+images (which is a 4D vector), ... Each node represents an operation on
+tensors, while edges represent tensors. This distinction between nodes
+and edges is more important from a formal standpoint than a practical
+one. Actually thinking of tensors as nodes makes no difference to the
+best of my knowledge.
 
-Figure \ref{fig:easygraph} shows the graph associated to an addition of
-two \texttt{tf.float32}'s (i.e. two tensors made of 32-bit float
-numbers). The first two nodes \texttt{a} and \texttt{b} outputs a
-tensor each. Those are used to feed the \texttt{add} node that will
-output the tensor resulting from the sum of \texttt{a} and \texttt{b}.
-Note that tensors are associated with edges only. Yet, a node can
-perform the operation of just \emph{returning} a tensor.
+Figure \ref{fig:easy-graph} shows a very simple computational graph.
+It's the one associated to an addition of two \texttt{tf.float32}'s
+(i.e. two tensors made of 32-bit float numbers). The first two nodes
+\texttt{a} and \texttt{b} outputs a tensor each. Those are used to feed
+the \texttt{add} node that will output the tensor resulting from the
+sum of \texttt{a} and \texttt{b}.
 
 \begin{figure}[H]
   \centering
@@ -64,21 +66,120 @@ perform the operation of just \emph{returning} a tensor.
     \draw [->] (b) ..controls (61.417bp,28.218bp) and (72.527bp,31.516bp)  .. (add);
     \draw [->] (a) ..controls (61.417bp,61.782bp) and (72.527bp,58.484bp)  .. (add);
   \end{tikzpicture}
-  \caption[easygraph]{An easy computational graph}
-  \label{fig:easygraph}
+  \caption[easy-graph]{An easy computational graph}
+  \label{fig:easy-graph}
 \end{figure}
 
-The code to build the graph of Figure \ref{fig:easygraph} using the
-TensorFlow Python API is
+A more interesting example would be a matrix multiplication. To remain
+on topic we'll use matrix multiplication in TensorFlow to implement a
+neural network. The neural network we want to implement consists of 25
+input neurons and 10 output neurons. A graphical representation of that
+is given in Figure \ref{fig:neural-network}.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[>=latex,line join=bevel,]
+    \node (s3) at (27.0bp,90.0bp) [draw,ellipse] {};
+    \node (s2) at (243.0bp,90.0bp) [draw,ellipse] {};
+    \node (s1) at (171.0bp,90.0bp) [draw,ellipse] {};
+    \node (s4) at (99.0bp,90.0bp) [draw,ellipse] {};
+    \node (d4) at (99.0bp,18.0bp) [draw,ellipse] {};
+    \node (d2) at (243.0bp,18.0bp) [draw,ellipse] {};
+    \node (d3) at (27.0bp,18.0bp) [draw,ellipse] {};
+    \node (d1) at (171.0bp,18.0bp) [draw,ellipse] {};
+    \draw [->] (s1) ..controls (171.0bp,64.131bp) and (171.0bp,54.974bp)  .. (d1);
+    \draw [->] (s2) ..controls (196.78bp,66.889bp) and (157.24bp,47.119bp)  .. (d4);
+    \draw [->] (s3) ..controls (89.947bp,69.018bp) and (165.24bp,43.919bp)  .. (d2);
+    \draw [->] (s1) ..controls (145.8bp,64.803bp) and (132.68bp,51.685bp)  .. (d4);
+    \draw [->] (s4) ..controls (124.2bp,64.803bp) and (137.32bp,51.685bp)  .. (d1);
+    \draw [->] (s2) ..controls (243.0bp,64.131bp) and (243.0bp,54.974bp)  .. (d2);
+    \draw [->] (s3) ..controls (52.197bp,64.803bp) and (65.315bp,51.685bp)  .. (d4);
+    \draw [->] (s4) ..controls (145.22bp,66.889bp) and (184.76bp,47.119bp)  .. (d2);
+    \draw [->] (s2) ..controls (180.05bp,69.018bp) and (104.76bp,43.919bp)  .. (d3);
+    \draw [->] (s4) ..controls (73.803bp,64.803bp) and (60.685bp,51.685bp)  .. (d3);
+    \draw [->] (s3) ..controls (27.0bp,64.131bp) and (27.0bp,54.974bp)  .. (d3);
+    \draw [->] (s3) ..controls (73.222bp,66.889bp) and (112.76bp,47.119bp)  .. (d1);
+    \draw [->] (s2) ..controls (217.8bp,64.803bp) and (204.68bp,51.685bp)  .. (d1);
+    \draw [->] (s1) ..controls (124.78bp,66.889bp) and (85.238bp,47.119bp)  .. (d3);
+    \draw [->] (s1) ..controls (196.2bp,64.803bp) and (209.32bp,51.685bp)  .. (d2);
+    \draw [->] (s4) ..controls (99.0bp,64.131bp) and (99.0bp,54.974bp)  .. (d4);
+  \end{tikzpicture}
+  \caption[neural-network]{A simple neural network}
+  \label{fig:neural-network}
+\end{figure}
+
+We'll need the weights and the bias and do
+
+\[ X * W + b \]
+
+where \( W \in \mathbb{R}^{4 \times 4} \) and \( b \in \mathbb{R}^{4} \),
+while $X$ is a \emph{batch} of input vectors in \( \mathbb{R}^4 \).
+If you imagine the input is a flattened image of 2 by 2 pixels, this
+neural network learns how to classify 4 different classes of images.
 
 \begin{minted}{python}
   >>> import tensorflow as tf
-  >>> a = tf.placeholder(tf.float32)
-  >>> b = tf.placeholder(tf.float32)
-  >>> add = tf.add(a, b)
-  >>> add
-  <tf.Tensor 'add:0' shape=<unknown> dtype=float32>
+  >>> W = tf.random_normal(shape=(4, 4))
+  >>> b = tf.random_normal(shape=(4,))
+  >>> X = tf.placeholder(shape=(None, 4), dtype=tf.float32)
+  >>> logits = tf.matmul(X, W) + b
+  >>> probabilities = tf.nn.softmax(logits)
+  >>>
+  >>> probabilities
+  <tf.Tensor 'Softmax:0' shape=(?, 4) dtype=float32>
 \end{minted}
+
+Notice that the Softmax function is applied to the result of the matrix
+multiplication. This is done for various reasons. One of them is
+normalize the result of the neural network in $[0, 1]$. Also, it
+introduces non-linearity in the model allowing the neural network to
+compute any function -- what's known as the ``Universal approximation
+theorem''.
+
+To get results out of the graph you need what's called a session in
+TensorFlow. Basically a session \emph{powers on} the graph, allowing
+you to run the computational graph with your own data and get actual
+tensors of actual numbers out of it. In the example above we can use a
+session to get probabilities out of our neural network for a batch of
+\( 2 \times 2 \) images.
+
+\begin{minted}{python}
+  >>> import numpy as np
+  >>> my_batch = np.random.rand(10, 4) # create a batch 10 images of 4x4 pixels
+  >>> my_batch
+  array([[0.54485176, 0.33854871, 0.45185129, 0.79884188],
+        [0.41204776, 0.23552753, 0.04101023, 0.47883844],
+        [0.25544491, 0.7610509 , 0.49307137, 0.6098213 ],
+        [0.02545156, 0.70459456, 0.22067103, 0.64743811],
+        [0.92359354, 0.96497353, 0.45790538, 0.49380769],
+        [0.13330072, 0.22947966, 0.02996348, 0.69954114],
+        [0.38397249, 0.30473362, 0.87023559, 0.90153084],
+        [0.77056319, 0.94843128, 0.39095345, 0.50572861],
+        [0.90112077, 0.19240995, 0.48437166, 0.46200152],
+        [0.98589042, 0.2013479 , 0.86091217, 0.55886214]])
+  >>> with tf.Session() as session:
+  ...     # we're _feeding_ the X placeholder with an actual numpy array
+  ...     session.run(probabilities, feed_dict={X: my_batch})
+  ...
+  array([[0.03751625, 0.8651346 , 0.05245555, 0.04489357],
+        [0.11873736, 0.6301607 , 0.17646323, 0.07463871],
+        [0.06252376, 0.82338244, 0.07284217, 0.04125158],
+        [0.12086256, 0.6911012 , 0.14362463, 0.04441159],
+        [0.03662292, 0.8575108 , 0.04834893, 0.05751737],
+        [0.12984137, 0.63064647, 0.1834405 , 0.05607158],
+        [0.01711418, 0.93650085, 0.02116078, 0.02522417],
+        [0.04886489, 0.83023334, 0.06332602, 0.05757581],
+        [0.033136  , 0.84808177, 0.05061754, 0.06816475],
+        [0.01250888, 0.9262628 , 0.01797607, 0.0432523 ]], dtype=float32)
+  >>> #              ^^^^^^^^^ the last image is of the second class with a confidence of 92%
+\end{minted}
+
+Of course building neural networks is pretty useless if you can't train
+them. In fact the probabilities above are totally non-sense: they're
+only based on the initial weights and bias randomly extracted from a
+normal distribution. There's no training set yet. To train a network in
+TensorFlow we need a \texttt{tf.Variable}. A variable in TensorFlow is
+a tensor whose value persists across sessions and that can be modified.
 
 \section{Keras}
 \label{sec:keras}
