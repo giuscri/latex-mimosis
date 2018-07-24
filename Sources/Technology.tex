@@ -47,7 +47,7 @@ multi-dimensional array: it can be a scalar, a matrix, a batch of RGB
 images (which is a 4D vector), ... Each node represents an operation on
 tensors, while edges represent tensors. This distinction between nodes
 and edges is more important from a formal standpoint than a practical
-one. Actually thinking of tensors as nodes makes no difference to the
+one: actually thinking of tensors as nodes makes no difference to the
 best of my knowledge.
 
 Figure \ref{fig:easy-graph} shows a very simple computational graph.
@@ -70,11 +70,10 @@ sum of \texttt{a} and \texttt{b}.
   \label{fig:easy-graph}
 \end{figure}
 
-A more interesting example would be a matrix multiplication. To remain
-on topic we'll use matrix multiplication in TensorFlow to implement a
-neural network. The neural network we want to implement consists of 25
-input neurons and 10 output neurons. A graphical representation of that
-is given in Figure \ref{fig:neural-network}.
+A more interesting example would be to implement a neural network using
+the computational graph. The neural network we want to implement
+consists of 4 input neurons and 4 output neurons. A graphical
+representation of that is given in Figure \ref{fig:neural-network}.
 
 \begin{figure}[H]
   \centering
@@ -117,6 +116,9 @@ while $X$ is a \emph{batch} of input vectors in \( \mathbb{R}^4 \).
 If you imagine the input is a flattened image of 2 by 2 pixels, this
 neural network learns how to classify 4 different classes of images.
 
+Using the TensorFlow Python API to build the related computational
+graph, we'll do
+
 \begin{minted}{python}
   >>> import tensorflow as tf
   >>> W = tf.random_normal(shape=(4, 4))
@@ -129,12 +131,13 @@ neural network learns how to classify 4 different classes of images.
   <tf.Tensor 'Softmax:0' shape=(?, 4) dtype=float32>
 \end{minted}
 
-Notice that the Softmax function is applied to the result of the matrix
-multiplication. This is done for various reasons. One of them is
-normalize the result of the neural network in $[0, 1]$. Also, it
-introduces non-linearity in the model allowing the neural network to
+Notice the \texttt{tf.nn.softmax} function is applied to the result of
+the matrix multiplication. This is done for various reasons: it
+introduces non-linearity allowing the neural network to learn to
 compute any function -- what's known as the ``Universal approximation
-theorem''.
+theorem''; also it normalizes the result of the neural network in
+$[0,1]$ allowing to interpret the output of the neural network in terms
+of \emph{probabilities}/confidence levels.
 
 To get results out of the graph you need what's called a session in
 TensorFlow. Basically a session \emph{powers on} the graph, allowing
@@ -145,8 +148,8 @@ session to get probabilities out of our neural network for a batch of
 
 \begin{minted}{python}
   >>> import numpy as np
-  >>> my_batch = np.random.rand(10, 4) # create a batch 10 images of 4x4 pixels
-  >>> my_batch
+  >>> ten_two_by_two_images_batch = np.random.rand(10, 4)
+  >>> ten_two_by_two_images_batch 
   array([[0.54485176, 0.33854871, 0.45185129, 0.79884188],
         [0.41204776, 0.23552753, 0.04101023, 0.47883844],
         [0.25544491, 0.7610509 , 0.49307137, 0.6098213 ],
@@ -159,7 +162,7 @@ session to get probabilities out of our neural network for a batch of
         [0.98589042, 0.2013479 , 0.86091217, 0.55886214]])
   >>> with tf.Session() as session:
   ...     # we're _feeding_ the X placeholder with an actual numpy array
-  ...     session.run(probabilities, feed_dict={X: my_batch})
+  ...     session.run(probabilities, feed_dict={X: ten_two_by_two_images_batch})
   ...
   array([[0.03751625, 0.8651346 , 0.05245555, 0.04489357],
         [0.11873736, 0.6301607 , 0.17646323, 0.07463871],
@@ -184,19 +187,20 @@ a tensor whose value persists across sessions and that can be modified.
 \section{Keras}
 \label{sec:keras}
 
-Keras is a high level library for building Machine Learning models. It consists
-of a simple API and bindings for a backend of choice, most notably TensorFlow.
-When you use the library, you're encouraged to use \emph{layers} instead of
-plain tensors. In fact the whole concept of TensorFlow tensors is hidden away by
-the library abstractions. To implement your model you stack layers. For example,
-you would stack a \texttt{Dense} layer and an \texttt{Activation} one to
-implement a simple neural network.
+Keras is a high level library for building Machine Learning models. It
+consists of a simple API and bindings for a backend of choice, most
+notably TensorFlow. When you use the library, you're encouraged to use
+\emph{layers} instead of plain tensors. In fact the whole concept of
+TensorFlow tensors is hidden away by the library abstractions. To
+implement your model you stack layers -- basically you build a list of
+layers. For example, to implement a simple neural network one would
+stack a \texttt{Dense} layer of 4 hidden neurons and an
+\texttt{Activation} layer for the Softmax function.
 
 \begin{minted}{python}
   from keras.models import Sequential
-
   model = Sequential([
-    Dense(batch_input_shape=(None, 784), 10),
+    Dense(batch_input_shape=(None, 4), units=4),
     Activation('softmax')
   ])
 \end{minted}
@@ -207,7 +211,6 @@ manipulates it. For example a simple custom one would be
 \begin{minted}{python}
   from keras.engine.base_layer import Layer
   import tensorflow as tf
-
   class Add42(Layer):
       def __init__(self):
           self.fortytwo = tf.constant(42)
@@ -216,28 +219,35 @@ manipulates it. For example a simple custom one would be
           return tf.add(X, self.fortytwo)
 \end{minted}
 
-While the idea is clean and beginner friendly, at the time of this writing the
-abstraction can become leaky when things goes wrong, needing the programmer to know
-about TensorFlow computational graphs to debug her program successfully.
+(Of course in a real layer instead of \texttt{self.fortytwo} one would
+have trainable TensorFlow variables.)
+
+While the idea is beginner friendly -- as it allows people to
+immediately concentrate on model's architecture instead of thinking
+about tensors -- at the time of this writing the abstraction can become
+leaky when things goes wrong, needing the programmer to know about
+TensorFlow computational graphs to debug her program successfully.
 
 \section{CleverHans}
 \label{sec:cleverhans}
 
-CleverHans is a library written by Google for building adversarial examples. It
-implements a variety of attacks against neural networks (FGS, T-FGS, Carlini and
-Wagner, ...) and it's compatible with models built with Keras. It uses the same
-computational graphs of TensorFlow to generate adversarial examples; again, as
-you use the library more and more understanding computational graphs becomes a
-necessity.
+CleverHans is a library written by Google for building adversarial
+examples. It implements a variety of attacks against neural networks
+(FGS, T-FGS, Carlini and Wagner, ...) and it's compatible with models
+built with Keras or plain TensorFlow. It uses the same computational
+graphs of TensorFlow to generate adversarial examples; again, as you
+use the library more and more understanding computational graphs
+becomes a necessity.
 
 \section{Scikit-learn}
 \label{sec:sklearn}
 
-Scikit-learn is a Python library written by Google providing a number of models,
-learning algorithms and other utilities for Machine Learning. It's perfect for
-fast prototyping as it uses a simple and consistent API and handles numpy arrays
-or even Python lists.
+Scikit-learn is a Python library written by Google providing a number
+of models, learning algorithms and other utilities for Machine
+Learning. It's perfect for fast prototyping as it uses a simple and
+consistent API and handles numpy arrays or even Python lists.
 
-I've used scikit-learn to borror a couple of decomposition algorithms (PCA, FastICA, ...)
-without having to implement them. This required a bit of reasoning as reusing scikit-learn algorithms on
-TensorFlow graphs was not straightforward.
+I've used scikit-learn to borrow a couple of decomposition algorithms
+(PCA, FastICA, ...) without having to implement them. This required a
+bit of reasoning as reusing scikit-learn algorithms on TensorFlow
+graphs was not straightforward.
