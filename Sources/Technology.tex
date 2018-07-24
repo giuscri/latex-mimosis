@@ -45,10 +45,10 @@ framework. A computational graph is a directed graph representing a
 computation involving tensors. A tensor in TensorFlow is a
 multi-dimensional array: it can be a scalar, a matrix, a batch of RGB
 images (which is a 4D vector), ... Each node represents an operation on
-tensors, while edges represent tensors. This distinction between nodes
+tensors, while edges represent tensors. (This distinction between nodes
 and edges is more important from a formal standpoint than a practical
 one: actually thinking of tensors as nodes makes no difference to the
-best of my knowledge.
+best of my knowledge.)
 
 Figure \ref{fig:easy-graph} shows a very simple computational graph.
 It's the one associated to an addition of two \texttt{tf.float32}'s
@@ -135,7 +135,7 @@ Notice the \texttt{tf.nn.softmax} function is applied to the result of
 the matrix multiplication. This is done for various reasons: it
 introduces non-linearity allowing the neural network to learn to
 compute any function -- what's known as the ``Universal approximation
-theorem''; also it normalizes the result of the neural network in
+theorem''; also it normalizes the results of the neural network in
 $[0,1]$ allowing to interpret the output of the neural network in terms
 of \emph{probabilities}/confidence levels.
 
@@ -180,9 +180,73 @@ session to get probabilities out of our neural network for a batch of
 Of course building neural networks is pretty useless if you can't train
 them. In fact the probabilities above are totally non-sense: they're
 only based on the initial weights and bias randomly extracted from a
-normal distribution. There's no training set yet. To train a network in
-TensorFlow we need a \texttt{tf.Variable}. A variable in TensorFlow is
-a tensor whose value persists across sessions and that can be modified.
+normal distribution. There's no training set, no training phase yet. To
+train a network in TensorFlow we need a \texttt{tf.Variable}. A
+variable in TensorFlow is a tensor whose value persists across sessions
+and that can be modified. This allows you to basically add parameters
+to your computational graphs, allowing you to compute different
+functions with the same graph. That, combined with a learning procedure
+that modifies the \texttt{tf.Variable}s allows you to train your model.
+
+To build a \texttt{tf.Variable} in TensorFlow you can just wrap an
+existing tensor. In the example above, the part of the graph that you
+want to parameterize are the weights matrix $W$ and the bias vector
+$b$.
+
+\begin{minted}{python}
+  W = tf.Variable(W)
+  b = tf.Variable(b)
+  logits = tf.matmul(X, W) + b # redefine logits: using different tensors now
+  probabilities = tf.nn.softmax(logits)
+\end{minted}
+
+To perform training we now need a training set. A training set in this
+example woule consist of lots of \(2 \times 2\) images and an ID
+associated to each image representing the class of that image.
+
+\emph{Training} basically means minimizing a loss function between the
+provided IDs of the training set and the IDs computed by the neural
+network. Minimization happens thanks to the parameters of our neural
+network: the \texttt{W} and \texttt{b} \texttt{tf.Variable}s.
+
+\begin{minted}{python}
+  y_true = tf.placeholder(shape=(None,), dtype=tf.float32)
+  cross_entropy = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y_true)
+\end{minted}
+
+where \emph{cross-entropy} is our loss function that we want to minimize.
+
+To minimize the cross-entropy one can use the Gradient descent
+algorithm -- an optimization procedure that works iteratively.
+TensorFlow implements that algorithm via a class exposing
+\texttt{.minimize()}: it returns a tensor that each time you run it in
+a session will modify the graph's \texttt{tf.Variable}s, trying to
+lower the value of the loss function.
+
+\begin{minted}{python}
+  from tf.train import GradientDescentOptimizer as SGD
+  optimizer = SGD(learning_rate=0.5).minimize(cross_entropy)
+\end{minted}
+
+So a typical training phase would consist of
+
+\begin{minted}{python}
+  with tf.Session() as session:
+      session.run(tf.global_variables_initializer()) # needed.
+
+  n_training_steps = 10
+  for i in range(n_training_steps):
+      images, classes = next_batch()
+      # fictitious function returning batches from the training set
+
+      with tf.Session() as session:
+          session.run(optimizer, feed_dict={X: images, y_true: classes})
+\end{minted}
+
+As you increase \texttt{n\_training\_steps}, \texttt{W} and \texttt{b}
+will be modified pushing the value of the loss function towards 0. That
+makes the model learn how to correctly classify images similar to those
+in the training set.
 
 \section{Keras}
 \label{sec:keras}
