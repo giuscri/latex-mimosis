@@ -131,13 +131,13 @@ graph, we'll do
   <tf.Tensor 'Softmax:0' shape=(?, 4) dtype=float32>
 \end{minted}
 
-Notice the \texttt{tf.nn.softmax} function is applied to the result of
+Note the \texttt{tf.nn.softmax} function is applied to the result of
 the matrix multiplication. This is done for various reasons: it
 introduces non-linearity allowing the neural network to learn to
 compute any function -- what's known as the ``Universal approximation
 theorem''; also it normalizes the results of the neural network in
 $[0,1]$ allowing to interpret the output of the neural network in terms
-of \emph{probabilities}/confidence levels.
+of \emph{probabilities} or confidence levels.
 
 To get results out of the graph you need what's called a session in
 TensorFlow. Basically a session \emph{powers on} the graph, allowing
