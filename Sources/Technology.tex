@@ -3,7 +3,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In this chapter I'm describing the technology that I used to implement
-the set of utilities and experiments described in section ??? This
+the set of utilities and experiments described in section ???. This
 chapter is organized as follows. In \ref{sec:tensorflow} I'm describing
 what is TensorFlow and how its computational graphs work. In
 \ref{sec:keras} I'm describing Keras, an high-level API for building
@@ -111,10 +111,10 @@ We'll need the weights and the bias and do
 
 \[ X * W + b \]
 
-where \( W \in \mathbb{R}^{4 \times 4} \) and \( b \in \mathbb{R}^{4} \),
-while $X$ is a \emph{batch} of input vectors in \( \mathbb{R}^4 \).
+where \( W \in \mathbb{R}^{4 \times 4} \) and \( b \in \mathbb{R}^{4}
+\), while $X$ is a \emph{batch} of input vectors in \( \mathbb{R}^4 \).
 If you imagine the input is a flattened image of 2 by 2 pixels, this
-neural network learns how to classify 4 different classes of images.
+neural network can be used to classify 4 different classes of images.
 
 Using the TensorFlow Python API to build the related computational
 graph, we'll do
@@ -137,7 +137,8 @@ introduces non-linearity allowing the neural network to learn to
 compute any function -- what's known as the ``Universal approximation
 theorem''; also it normalizes the results of the neural network in
 $[0,1]$ allowing to interpret the output of the neural network in terms
-of \emph{probabilities} or confidence levels.
+of confidence levels or, as they are improperly called,
+\emph{probabilities}.
 
 To get results out of the graph you need what's called a session in
 TensorFlow. Basically a session \emph{powers on} the graph, allowing
@@ -205,23 +206,23 @@ example woule consist of lots of \(2 \times 2\) images and an ID
 associated to each image representing the class of that image.
 
 \emph{Training} basically means minimizing a loss function between the
-provided IDs of the training set and the IDs computed by the neural
-network. Minimization happens thanks to the parameters of our neural
-network: the \texttt{W} and \texttt{b} \texttt{tf.Variable}s.
+provided IDs of the training set and the IDs guessed by the neural
+network. The loss function we're going to use is called
+\emph{cross-entropy} and TensorFlow implements it via
+\texttt{tf.nn.softmax\_cross\_entropy\_with\_logits\_v2}
 
 \begin{minted}{python}
   y_true = tf.placeholder(shape=(None,), dtype=tf.float32)
   cross_entropy = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y_true)
 \end{minted}
 
-where \emph{cross-entropy} is our loss function that we want to minimize.
-
-To minimize the cross-entropy one can use the Gradient descent
-algorithm -- an optimization procedure that works iteratively.
-TensorFlow implements that algorithm via a class exposing
-\texttt{.minimize()}: it returns a tensor that each time you run it in
-a session will modify the graph's \texttt{tf.Variable}s, trying to
-lower the value of the loss function.
+To minimize the cross-entropy we're using the Gradient descent
+algorithm -- an minimization technique that works iteratively.
+TensorFlow implements that algorithm via a class:
+\texttt{GradientDescentOptimizer}. Instances of that class expose
+a \texttt{.minimize()} method that returns a tensor that each time you
+run it in a session will modify the graph's \texttt{tf.Variable}s,
+trying to lower the value of the loss function.
 
 \begin{minted}{python}
   from tf.train import GradientDescentOptimizer as SGD
@@ -283,9 +284,6 @@ manipulates it. For example a simple custom one would be
           return tf.add(X, self.fortytwo)
 \end{minted}
 
-(Of course in a real layer instead of \texttt{self.fortytwo} one would
-have trainable TensorFlow variables.)
-
 While the idea is beginner friendly -- as it allows people to
 immediately concentrate on model's architecture instead of thinking
 about tensors -- at the time of this writing the abstraction can become
@@ -321,5 +319,5 @@ graphs was not straightforward.
 
 Google Cloud Platform is a set of services that allows people to
 \emph{borrow} computational power from Google. In our case, we used
-Google Cloud Platform to get access to a GPU for few dollars. That made
-running experiments a lot faster in many cases.
+Google Cloud Platform to get access to a GPU for few dollars a month.
+That made running experiments a lot faster in many cases.
