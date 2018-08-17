@@ -1,0 +1,11 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Image filters as a defense against adversarial input}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In this chapter we'll test a couple of image filter techniques as a
+defense against adversarial input. The intuition behind this idea is
+that to forge an adversarial input the attacker will try to put noise
+in \emph{portions} of the image that carry the least information --
+intuitively to be stealthy. By cutting out that information for every
+image we hope to reduce the probability of success for the attacker, as
+we would filter out part of the noise of adversarial input.
