@@ -2,10 +2,60 @@
 \chapter{Image filters as a defense against adversarial input}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this chapter we'll test a couple of image filter techniques as a
-defense against adversarial input. The intuition behind this idea is
-that to forge an adversarial input the attacker will try to put noise
-in \emph{portions} of the image that carry the least information --
-intuitively to be stealthy. By cutting out that information for every
-image we hope to reduce the probability of success for the attacker, as
-we would filter out part of the noise of adversarial input.
+In this chapter we'll test a couple of image filters against
+adversarial input. The intuition behind the idea of filtering the image
+is that to forge an adversarial input the attacker will try to put
+little noise distributed in the image. As these filters highlight the
+\emph{important} features of an image we hope they cut out the noise
+introduced by the attacker.
+
+For each of the filters tested in this chapter we can set its
+parameters such that it can be more or less destructive in regards of
+the original information. Intuitively the more invasive the filter the
+better will be the defense. Unfortunately the better the defense the
+more the lost accuracy too: two different images can be confused as the
+same image for the model as the information that distiguished the two
+images is now potentially lost. That means that the \emph{best} filter
+will be the one that provides the best defense given the accuracy lost
+by the model is not \emph{too much}.
+
+<<SHOULDNT WE WRITE AN ATTACK CHAPTER?>> As a baseline we performed an
+attack of Fast Gradient Sign with its parameter $\eta$ set to 0.1. We
+chose that value for $\eta$ as it's a median value between a
+non-effective attack -- when $\eta$ equals 0 -- and an attack that's
+mostly unstoppable -- when $\eta$ is greater than 0.25.
+
+<<INSERT 3 IMAGES OF THE SAME INPUT AS ETA INCREASES>>
+
+In our \emph{gray-box} setting we measured an accuracy on the MNIST
+test set of 97.39\% and a probability of success for the attacker of
+81\%. Again, we expected these quantities to go down as we increase the
+\emph{power} of the filter technique: while we try to stop the attacker
+we have to reduce the accuracy of the model too.
+
+\section{Principal Component Analysis}
+
+<<WRITE GENERAL STUFF ON PCA>>
+
+We tried the following setting for PCA: retain all the components of an
+image (784 pixels), 331 of them, 100 of them, 20 and 10 components.
+
+\begin{itemize}
+  \item Retaining all the 784 components: accuracy 97.38\%, adversarial
+    success score 82\%.
+  \item Retaining 331 principal components: accuracy 97.52\%,
+    adversarial success score 71\%.
+  \item Retaining 100 principal components: accuracy 97.48\%,
+    adversarial success score 44\%.
+  \item Retaining 20 principal components: accuracy 94.18\%,
+    adversarial success score 23\%.
+  \item Retaining 10 principal components: accuracy 83\%, adversarial
+    success score 22\%.
+\end{itemize}
+
+Of all these setting the best result is achieved when we retained 100
+components. The accuracy on the MNIST test set is pretty the same (in
+fact, it's even increased with the help of the filter) and the
+adversarial success score is halved: from the original probability of
+81\% to 44\%. When we're comparing PCA with other image filters we'll
+consider this setting of 100 components.
