@@ -197,7 +197,7 @@ session to get probabilities out of our neural network for a batch of
 
 Of course building neural networks is pretty useless if you can't train
 them. In fact the probabilities above are totally non-sense: they're
-only based on the initial weights and bias randomly extracted from a
+only based on the initial weight and bias randomly extracted from a
 uniform distribution. There's no training set, no training phase yet. To
 train a network in TensorFlow we need a \texttt{tf.Variable}. A
 variable in TensorFlow is a tensor whose value persists across sessions
@@ -208,7 +208,7 @@ that modifies the \texttt{tf.Variable}s allows you to train your model.
 
 To build a \texttt{tf.Variable} in TensorFlow you can just wrap an
 existing tensor. In the example above, the part of the graph that you
-want to parameterize are the weights matrix $W$ and the bias vector
+want to parameterize are the weight matrix $W$ and the bias vector
 $b$.
 
 \begin{figure}
