@@ -247,33 +247,32 @@ a \texttt{minimize} method that returns a tensor that each time you
 run it in a session will modify the graph's \texttt{tf.Variable}s,
 trying to lower the value of the loss function.
 
+So a typical training phase is the one in Figure \ref{fig:training}.
+
 \begin{figure}
   \begin{minted}{python}
     from tf.train import GradientDescentOptimizer as SGD
     optimizer = SGD(learning_rate=0.5).minimize(cross_entropy)
+
+    with tf.Session() as session:
+        session.run(tf.global_variables_initializer()) # needed.
+
+    n_training_steps = 10
+    for i in range(n_training_steps):
+        images, classes = next_batch()
+        # fictitious function returning batches from the training set
+
+        with tf.Session() as session:
+            session.run(optimizer, feed_dict={X: images, y_true: classes})
   \end{minted}
-  \caption{}
+  \caption{Manually training a TensorFlow neural network}
+  \label{fig:training}
 \end{figure}
 
-So a typical training phase would consist of
-
-\begin{minted}{python}
-  with tf.Session() as session:
-      session.run(tf.global_variables_initializer()) # needed.
-
-  n_training_steps = 10
-  for i in range(n_training_steps):
-      images, classes = next_batch()
-      # fictitious function returning batches from the training set
-
-      with tf.Session() as session:
-          session.run(optimizer, feed_dict={X: images, y_true: classes})
-\end{minted}
-
 As you increase \texttt{n\_training\_steps}, \texttt{W} and \texttt{b}
-will be modified pushing the value of the loss function towards 0. That
-makes the model learn how to correctly classify images similar to those
-in the training set.
+will be modified pushing the value of the loss function towards a local
+minimum. That makes the model learn how to correctly classify images
+similar to those in the training set.
 
 \section{Keras}
 \label{sec:keras}
