@@ -5,7 +5,7 @@
 In this chapter I describe the tools and libraries that I used to implement
 the set experiments described in Chapter \ref{ch:tools-and-libraries}. This
 chapter is organized as follows: Section \ref{sec:tensorflow} is dedicated to
-what is TensorFlow and how its computational graphs work;
+TensorFlow \footnote{https://www.tensorflow.org/} and how its computational graphs work;
 Section \ref{sec:keras} to Keras, a high-level API for building
 Machine Learning models without working with low-level libraries like
 TensorFlow; Section \ref{sec:cleverhans} to CleverHans, a
@@ -38,7 +38,9 @@ first. For example, in the following snippet of code
 it contains a reference to a node of the computational graph (which
 will always output 42). In general until you don't run the
 computational graph it's hard to determine what's going to be the value
-of a tensor. That's slowing down exploratory analysis.
+of a tensor (``the main object you manipulate and pass around [in TensorFlow]''%
+\footnote{https://web.archive.org/web/20180921135324/https://www.tensorflow.org/guide/tensors}
+-- see below). That's slowing down exploratory analysis.
 
 \subsection{About computational graphs}
 \label{subsec:computational-graph}
