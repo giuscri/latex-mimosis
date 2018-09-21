@@ -77,8 +77,8 @@ sum of \texttt{a} and \texttt{b}.
 
 A more interesting example would be to implement a neural network using
 a computational graph. For example, Figure \ref{fig:neural-network}
-graphically represents a simple neural network consisting of four input
-neurons and four output neurons.
+graphically represents a simple neural network of four input neurons
+and four output neurons.
 
 \begin{figure}
   \centering
@@ -112,14 +112,15 @@ neurons and four output neurons.
   \label{fig:neural-network}
 \end{figure}
 
-We'll need the weights and the bias and do
+\emph{Running} this network requires computing
 
 \[ X * W + b \]
 
-where \( W \in \mathbb{R}^{4 \times 4} \) and \( b \in \mathbb{R}^{4}
-\), while $X$ is a \emph{batch} of input vectors in \( \mathbb{R}^4 \).
-If you imagine the input is a flattened image of 2 by 2 pixels, this
-neural network can be used to classify 4 different classes of images.
+where \( W \in \mathbb{R}^{4 \times 4} \) is a matrix of weights and \(
+b \in \mathbb{R}^{4}\) is a vector of biases, while $X$ is a
+\emph{batch} of input vectors in \( \mathbb{R}^4 \).
+When the input is a flattened image of 2 by 2 pixels this neural
+network can be used to classify 4 different classes of images.
 
 Using the TensorFlow Python API to build the related computational
 graph, we'll do
