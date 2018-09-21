@@ -222,14 +222,14 @@ $b$.
 \end{figure}
 
 To perform training we now need a training set. A training set in this
-example woule consist of lots of \(2 \times 2\) images and an ID
+example would consist of several \(2 \times 2\) images and a label
 associated to each image representing the class of that image.
 
 \emph{Training} basically means minimizing a loss function between the
-provided IDs of the training set and the IDs guessed by the neural
+provided labels of the training set and the labels guessed by the neural
 network. The loss function we're going to use is called
 \emph{cross-entropy} and TensorFlow implements it via
-\texttt{tf.nn.softmax\_cross\_entropy\_with\_logits\_v2}
+\texttt{tf.nn.softmax\_cross\_entropy\_with\_logits\_v2}.
 
 \begin{figure}
   \begin{minted}{python}
@@ -239,11 +239,11 @@ network. The loss function we're going to use is called
   \caption{}
 \end{figure}
 
-To minimize the cross-entropy we're using the Gradient descent
-algorithm -- an minimization technique that works iteratively.
-TensorFlow implements that algorithm via a class:
-\texttt{GradientDescentOptimizer}. Instances of that class expose
-a \texttt{.minimize()} method that returns a tensor that each time you
+To minimize the cross-entropy we're using the ``gradient descent
+algorithm'' -- a minimization technique that works iteratively.
+TensorFlow implements that algorithm via the
+\texttt{GradientDescentOptimizer} class. Instances of that class expose
+a \texttt{minimize} method that returns a tensor that each time you
 run it in a session will modify the graph's \texttt{tf.Variable}s,
 trying to lower the value of the loss function.
 
