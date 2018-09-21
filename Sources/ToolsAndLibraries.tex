@@ -25,15 +25,20 @@ distributed and parallel computations. While this \emph{paradigm} makes
 TensorFlow suitable even for research and production environments, it
 can be quite daunting to use when tinkering. In fact, computational
 graphs are built and only later executed. This is counter-intuitive at
-first. For example, in the following snippet of code
+first.
 
-\begin{minted}{python}
-  >>> import tensorflow as tf
-  >>> symbol = tf.constant(42)
-  >>> symbol 
-  <tf.Tensor 'Const:0' shape=() dtype=int32>
-\end{minted}
+\begin{figure}
+  \begin{minted}{python}
+    >>> import tensorflow as tf
+    >>> symbol = tf.constant(42)
+    >>> symbol
+    <tf.Tensor 'Const:0' shape=() dtype=int32>
+  \end{minted}
+  \caption{}
+  \label{fig:fortytwo}
+\end{figure}
 
+For example, in Figure \ref{fig:fortytwo}
 \texttt{symbol} doesn't contain a reference to the integer 42. Instead
 it contains a reference to a node of the computational graph (which
 will always output 42). In general until you don't run the
@@ -122,20 +127,20 @@ b \in \mathbb{R}^{4}\) is a vector of biases, while $X$ is a
 When the input is a flattened image of 2 by 2 pixels this neural
 network can be used to classify 4 different classes of images.
 
-Using the TensorFlow Python API to build the related computational
-graph, we'll do
-
-\begin{minted}{python}
-  >>> import tensorflow as tf
-  >>> W = tf.random_normal(shape=(4, 4))
-  >>> b = tf.random_normal(shape=(4,))
-  >>> X = tf.placeholder(shape=(None, 4), dtype=tf.float32)
-  >>> logits = tf.matmul(X, W) + b
-  >>> probabilities = tf.nn.softmax(logits)
-  >>>
-  >>> probabilities
-  <tf.Tensor 'Softmax:0' shape=(?, 4) dtype=float32>
-\end{minted}
+\begin{figure}
+  \begin{minted}{python}
+    >>> import tensorflow as tf
+    >>> W = tf.random_normal(shape=(4, 4))
+    >>> b = tf.random_normal(shape=(4,))
+    >>> X = tf.placeholder(shape=(None, 4), dtype=tf.float32)
+    >>> logits = tf.matmul(X, W) + b
+    >>> probabilities = tf.nn.softmax(logits)
+    >>>
+    >>> probabilities
+    <tf.Tensor 'Softmax:0' shape=(?, 4) dtype=float32>
+  \end{minted}
+  \caption{Using the TensorFlow Python API for $X * W + b$}
+\end{figure}
 
 Note the \texttt{tf.nn.softmax} function is applied to the result of
 the matrix multiplication. This is done for various reasons: it
@@ -149,40 +154,43 @@ of confidence levels or, as they are improperly called,
 To get results out of the graph you need what's called a session in
 TensorFlow. Basically a session \emph{powers on} the graph, allowing
 you to run the computational graph with your own data and get actual
-tensors of actual numbers out of it. In the example above we can use a
+tensors of actual numbers out of it. In Figure {fig:use-session} we use a
 session to get probabilities out of our neural network for a batch of
 \( 2 \times 2 \) images.
 
-\begin{minted}{python}
-  >>> import numpy as np
-  >>> ten_two_by_two_images_batch = np.random.rand(10, 4)
-  >>> ten_two_by_two_images_batch 
-  array([[0.54485176, 0.33854871, 0.45185129, 0.79884188],
-        [0.41204776, 0.23552753, 0.04101023, 0.47883844],
-        [0.25544491, 0.7610509 , 0.49307137, 0.6098213 ],
-        [0.02545156, 0.70459456, 0.22067103, 0.64743811],
-        [0.92359354, 0.96497353, 0.45790538, 0.49380769],
-        [0.13330072, 0.22947966, 0.02996348, 0.69954114],
-        [0.38397249, 0.30473362, 0.87023559, 0.90153084],
-        [0.77056319, 0.94843128, 0.39095345, 0.50572861],
-        [0.90112077, 0.19240995, 0.48437166, 0.46200152],
-        [0.98589042, 0.2013479 , 0.86091217, 0.55886214]])
-  >>> with tf.Session() as session:
-  ...     # we're _feeding_ the X placeholder with an actual numpy array
-  ...     session.run(probabilities, feed_dict={X: ten_two_by_two_images_batch})
-  ...
-  array([[0.03751625, 0.8651346 , 0.05245555, 0.04489357],
-        [0.11873736, 0.6301607 , 0.17646323, 0.07463871],
-        [0.06252376, 0.82338244, 0.07284217, 0.04125158],
-        [0.12086256, 0.6911012 , 0.14362463, 0.04441159],
-        [0.03662292, 0.8575108 , 0.04834893, 0.05751737],
-        [0.12984137, 0.63064647, 0.1834405 , 0.05607158],
-        [0.01711418, 0.93650085, 0.02116078, 0.02522417],
-        [0.04886489, 0.83023334, 0.06332602, 0.05757581],
-        [0.033136  , 0.84808177, 0.05061754, 0.06816475],
-        [0.01250888, 0.9262628 , 0.01797607, 0.0432523 ]], dtype=float32)
-  >>> #              ^^^^^^^^^ the last image is of the second class with a confidence of 92%
-\end{minted}
+\begin{figure}
+  \begin{minted}{python}
+    >>> import numpy as np
+    >>> ten_two_by_two_images_batch = np.random.rand(10, 4)
+    >>> ten_two_by_two_images_batch
+    array([[0.54485176, 0.33854871, 0.45185129, 0.79884188],
+          [0.41204776, 0.23552753, 0.04101023, 0.47883844],
+          [0.25544491, 0.7610509 , 0.49307137, 0.6098213 ],
+          [0.02545156, 0.70459456, 0.22067103, 0.64743811],
+          [0.92359354, 0.96497353, 0.45790538, 0.49380769],
+          [0.13330072, 0.22947966, 0.02996348, 0.69954114],
+          [0.38397249, 0.30473362, 0.87023559, 0.90153084],
+          [0.77056319, 0.94843128, 0.39095345, 0.50572861],
+          [0.90112077, 0.19240995, 0.48437166, 0.46200152],
+          [0.98589042, 0.2013479 , 0.86091217, 0.55886214]])
+    >>> with tf.Session() as session:
+    ...     # we're _feeding_ the X placeholder with an actual numpy array
+    ...     session.run(probabilities, feed_dict={X: ten_two_by_two_images_batch})
+    ...
+    array([[0.03751625, 0.8651346 , 0.05245555, 0.04489357],
+          [0.11873736, 0.6301607 , 0.17646323, 0.07463871],
+          [0.06252376, 0.82338244, 0.07284217, 0.04125158],
+          [0.12086256, 0.6911012 , 0.14362463, 0.04441159],
+          [0.03662292, 0.8575108 , 0.04834893, 0.05751737],
+          [0.12984137, 0.63064647, 0.1834405 , 0.05607158],
+          [0.01711418, 0.93650085, 0.02116078, 0.02522417],
+          [0.04886489, 0.83023334, 0.06332602, 0.05757581],
+          [0.033136  , 0.84808177, 0.05061754, 0.06816475],
+          [0.01250888, 0.9262628 , 0.01797607, 0.0432523 ]], dtype=float32)
+    >>> #              ^^^^^^^^^ the last image is of the second class with a confidence of 92%
+  \end{minted}
+  \caption{}
+\end{figure}
 
 Of course building neural networks is pretty useless if you can't train
 them. In fact the probabilities above are totally non-sense: they're
@@ -200,12 +208,15 @@ existing tensor. In the example above, the part of the graph that you
 want to parameterize are the weights matrix $W$ and the bias vector
 $b$.
 
-\begin{minted}{python}
-  W = tf.Variable(W)
-  b = tf.Variable(b)
-  logits = tf.matmul(X, W) + b # redefine logits: using different tensors now
-  probabilities = tf.nn.softmax(logits)
-\end{minted}
+\begin{figure}
+  \begin{minted}{python}
+    W = tf.Variable(W)
+    b = tf.Variable(b)
+    logits = tf.matmul(X, W) + b # redefine logits: using different tensors now
+    probabilities = tf.nn.softmax(logits)
+  \end{minted}
+  \caption{}
+\end{figure}
 
 To perform training we now need a training set. A training set in this
 example woule consist of lots of \(2 \times 2\) images and an ID
@@ -217,10 +228,13 @@ network. The loss function we're going to use is called
 \emph{cross-entropy} and TensorFlow implements it via
 \texttt{tf.nn.softmax\_cross\_entropy\_with\_logits\_v2}
 
-\begin{minted}{python}
-  y_true = tf.placeholder(shape=(None,), dtype=tf.float32)
-  cross_entropy = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y_true)
-\end{minted}
+\begin{figure}
+  \begin{minted}{python}
+    y_true = tf.placeholder(shape=(None,), dtype=tf.float32)
+    cross_entropy = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y_true)
+  \end{minted}
+  \caption{}
+\end{figure}
 
 To minimize the cross-entropy we're using the Gradient descent
 algorithm -- an minimization technique that works iteratively.
@@ -230,10 +244,13 @@ a \texttt{.minimize()} method that returns a tensor that each time you
 run it in a session will modify the graph's \texttt{tf.Variable}s,
 trying to lower the value of the loss function.
 
-\begin{minted}{python}
-  from tf.train import GradientDescentOptimizer as SGD
-  optimizer = SGD(learning_rate=0.5).minimize(cross_entropy)
-\end{minted}
+\begin{figure}
+  \begin{minted}{python}
+    from tf.train import GradientDescentOptimizer as SGD
+    optimizer = SGD(learning_rate=0.5).minimize(cross_entropy)
+  \end{minted}
+  \caption{}
+\end{figure}
 
 So a typical training phase would consist of
 
