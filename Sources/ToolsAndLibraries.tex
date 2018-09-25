@@ -2,30 +2,41 @@
 \chapter{Tools and libraries}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this chapter I describe the tools and libraries that I used to implement
-the set experiments described in Chapter \ref{ch:tools-and-libraries}. This
-chapter is organized as follows: Section \ref{sec:tensorflow} is dedicated to
-TensorFlow \footnote{https://www.tensorflow.org/} and how its computational graphs work;
-Section \ref{sec:keras} to Keras, a high-level API for building
+In this chapter I describe the tools and libraries that I used to
+implement the set of experiments described in Chapter
+\ref{ch:robust-networks}. This chapter is organized as follows: Section
+\ref{sec:tensorflow} is dedicated to
+TensorFlow\footnote{https://www.tensorflow.org/} and its computational
+graph, Section \ref{sec:keras} to Keras, a high-level API for building
 Machine Learning models without working with low-level libraries like
-TensorFlow; Section \ref{sec:cleverhans} to CleverHans, a
-library to generate adversarial examples against a given model;
-Section \ref{sec:sklearn} to scikit-learn, a library for building
-and training Machine Learning models;
-finally Section \ref{sec:google-cloud-platform} is about Google Cloud
-Platform, a service by Google that allows you to buy computational
-powers to run your own code.
+TensorFlow, Section \ref{sec:cleverhans} to CleverHans, a library to
+generate adversarial examples against a given model, Section
+\ref{sec:sklearn} to scikit-learn, a library for building and training
+Machine Learning models, and Section \ref{sec:google-cloud-platform} is
+dedicated to Google Cloud Platform, a service by Google that allows you
+to buy computational power to run your own code.
 
 \section{TensorFlow}
 \label{sec:tensorflow}
 
 TensorFlow is a C++ framework for Machine Learning released by Google.
-It uses a programming model called Data Flow that aims to allow
-distributed and parallel computations. While this \emph{paradigm} makes
-TensorFlow suitable even for research and production environments, it
-can be quite daunting to use when tinkering. In fact, computational
-graphs are built and only later executed. This is counter-intuitive at
-first.
+It uses a programming model called Data Flow. While this allows
+parallel and distributed computation, it can be quite daunting to use
+when tinkering. In fact, computational graphs are first built and only
+later executed. I think this is counter-intuitive for most people. For
+example, in Figure \ref{fig:fortytwo} \texttt{symbol} doesn't contain a
+reference to the integer 42 -- as opposed to what would have been if
+\texttt{symbol} was an \texttt{int} variable. Instead it contains a
+reference to a node of the computational graph which will always output
+42. In TensorFlow computation is done by connecting one or more of
+these nodes to other nodes, letting \emph{tensors} (``the main object
+you manipulate and pass around [in TensorFlow]''%
+\footnote{https://web.archive.org/web/20180921135324/https://www.tensorflow.org/guide/tensors})
+move around this graph -- in case of Figure \ref{fig:fortytwo}, the
+tensor is the output of the only one node in the graph: the tensor
+is 42. Problem is that in general until you don't run the computational
+graph it's hard to determine what's going to be the value of a tensor.
+This is slowing down exploratory analysis.
 
 \begin{figure}
   \begin{minted}{python}
@@ -38,23 +49,14 @@ first.
   \label{fig:fortytwo}
 \end{figure}
 
-For example, in Figure \ref{fig:fortytwo}
-\texttt{symbol} doesn't contain a reference to the integer 42. Instead
-it contains a reference to a node of the computational graph (which
-will always output 42). In general until you don't run the
-computational graph it's hard to determine what's going to be the value
-of a tensor (``the main object you manipulate and pass around [in TensorFlow]''%
-\footnote{https://web.archive.org/web/20180921135324/https://www.tensorflow.org/guide/tensors}
--- see below). That's slowing down exploratory analysis.
-
-\subsection{About computational graphs}
+\subsection{About the computational graph}
 \label{subsec:computational-graph}
 
-TensorFlow computational graphs are a fundamental part of the
+TensorFlow's computational graph is a fundamental part of the
 framework. A computational graph is a directed graph representing a
 computation involving tensors. A tensor in TensorFlow is a
 multi-dimensional array: it can be a scalar, a matrix, a batch of RGB
-images (which is a 4D vector), ... Each node represents an operation on
+images (which is a 4D vector), etc. Each node represents an operation on
 tensors, while edges represent tensors. (This distinction between nodes
 and edges is more important from a formal standpoint than a practical
 one: actually thinking of tensors as nodes makes no difference to the
@@ -157,9 +159,21 @@ improperly called, \emph{probabilities}.
 To get results out of the graph you need what's called a session in
 TensorFlow. Basically a session \emph{powers on} the graph, allowing
 you to run the computational graph with your own data and get actual
-tensors of actual numbers out of it. In Figure {fig:use-session} we use a
+tensors of actual numbers out of it. In Figure \ref{fig:use-session} we use a
 session to get probabilities out of our neural network for a batch of
 \( 2 \times 2 \) images.
+
+Of course building neural networks is pretty useless if you can't train
+them. In fact the probabilities in Figure \ref{fig:use-session} are
+totally non-sense: they're only based on the initial weight and bias
+randomly extracted from a uniform distribution. There's no training
+set, no training phase yet. To train a network in TensorFlow we need a
+\texttt{tf.Variable}. A variable in TensorFlow is a tensor whose value
+persists across sessions and that can be modified. This allows you to
+basically add parameters to your computational graphs, allowing you to
+compute different functions with the same graph. That, combined with a
+learning procedure that modifies the \texttt{tf.Variable}s allows you
+to train your model.
 
 \begin{figure}
   \begin{minted}{python}
@@ -192,19 +206,9 @@ session to get probabilities out of our neural network for a batch of
           [0.01250888, 0.9262628 , 0.01797607, 0.0432523 ]], dtype=float32)
     >>> #              ^^^^^^^^^ the last image is of the second class with a confidence of 92%
   \end{minted}
+  \label{fig:use-session}
   \caption{}
 \end{figure}
-
-Of course building neural networks is pretty useless if you can't train
-them. In fact the probabilities above are totally non-sense: they're
-only based on the initial weight and bias randomly extracted from a
-uniform distribution. There's no training set, no training phase yet. To
-train a network in TensorFlow we need a \texttt{tf.Variable}. A
-variable in TensorFlow is a tensor whose value persists across sessions
-and that can be modified. This allows you to basically add parameters
-to your computational graphs, allowing you to compute different
-functions with the same graph. That, combined with a learning procedure
-that modifies the \texttt{tf.Variable}s allows you to train your model.
 
 To build a \texttt{tf.Variable} in TensorFlow you can just wrap an
 existing tensor. In the example above, the part of the graph that you
@@ -247,8 +251,6 @@ a \texttt{minimize} method that returns a tensor that each time you
 run it in a session will modify the graph's \texttt{tf.Variable}s,
 trying to lower the value of the loss function.
 
-So a typical training phase is the one in Figure \ref{fig:training}.
-
 \begin{figure}
   \begin{minted}{python}
     from tf.train import GradientDescentOptimizer as SGD
@@ -269,10 +271,12 @@ So a typical training phase is the one in Figure \ref{fig:training}.
   \label{fig:training}
 \end{figure}
 
-As you increase \texttt{n\_training\_steps}, \texttt{W} and \texttt{b}
-will be modified pushing the value of the loss function towards a local
-minimum. That makes the model learn how to correctly classify images
-similar to those in the training set.
+A typical training phase in TensorFlow would like the one in Figure
+\ref{fig:training}; as you increase the training steps, \texttt{W} and
+\texttt{b} will be modified pushing the value of the loss function
+towards a local minimum. This should make the model correctly classify
+images similar to those in the training set (though in general a low
+value for the loss function doesn't always mean good classifications).
 
 \section{Keras}
 \label{sec:keras}
