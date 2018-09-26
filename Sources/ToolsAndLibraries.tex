@@ -74,10 +74,10 @@ computation involving tensors. A tensor in TensorFlow is a
 multi-dimensional array: it can be a scalar, a matrix, a batch of RGB
 images (which is a 4D vector\footnote{If you always thought human can't
   visualize four dimensions all at once, think again.}), etc. Each node
-represents an operation on tensors, while edges represent tensors.
-(This distinction between nodes and edges is important more from a
-formal standpoint than a practical one: actually thinking of tensors as
-nodes makes no difference to the best of my knowledge.)
+represents an operation on tensors, while edges represent
+tensors.\footnote{This distinction between nodes and edges is important
+  more from a formal standpoint than a practical one: actually thinking
+  of tensors as nodes makes no difference to the best of my knowledge.}
 
 Figure \ref{fig:easy-graph} shows a very simple computational graph.
 It's the one associated to an addition of two \texttt{tf.float32}'s
@@ -128,23 +128,25 @@ the sum of \texttt{a} and \texttt{b}.
   \label{fig:neural-network}
 \end{figure}
 
-TensorFlow allows users to program that computational graph with an API
-using Python. A perhaps interesting example of the kind of computation
-one can express in TensorFlow using Python would the implementation of
-a neural network. Figure \ref{fig:neural-network} graphically
-represents the network we're going to implement: a simple feedforward
+The most commonly used way to program the computational graph is by
+using a Python API. A perhaps interesting example of the kind of
+computation one can express in TensorFlow using Python would the
+implementation of a neural network. Figure \ref{fig:neural-network}
+graphically represents the network we're going to implement: a simple
+feedforward
 network\footnote{https://en.wikipedia.org/wiki/Feedforward\_neural\_network}
 of four input neurons and four output neurons. As explained in Chapter
 \ref{ch:background} what a feedforward neural network does is a linear
-operation on its input and the application of an activation function on
-that result. That is, it computes
+operation on its input and the application of an \emph{activation
+  function} on that result. That is, it computes
 
 \[ \text{activation}(X * W + b) \]
 
 given its weight matrix and its bias vector, \( W \in \mathbb{R}^{4
-  \times 4} \) and \( b \in \mathbb{R}^{4}\) respectively. When the
-input is a flattened image of 2 by 2 pixels this neural network can in
-principle be trained to classify 4 different classes of images.
+  \times 4} \) and \( b \in \mathbb{R}^{4}\) respectively, while
+\( \text{activation} \) is a \emph{non}-linear function such as
+ReLU\footnote{https://en.wikipedia.org/wiki/Rectifier\_(neural\_networks)
+}.
 
 \begin{figure}
   \begin{minted}{python}
@@ -163,93 +165,79 @@ principle be trained to classify 4 different classes of images.
 
 To get an idea of how to do that in TensorFlow see Figure
 \ref{fig:tensorflow-feedforward}. Note that TensorFlow already
-implements the activation function \texttt{tf.nn.softmax} That is
-applied to the result of the matrix multiplication. As explained in
-Chapter \ref{ch:background} this is done for various reasons: it
-introduces a \emph{non-linear factor} in the network computations
-allowing it to learn how to compute a larger set of
+implements the activation function \texttt{tf.nn.softmax}. That
+function is applied to the result of the matrix multiplication. As
+explained in Chapter \ref{ch:background} this is done for various
+reasons: it introduces a \emph{non-linear factor} in the network
+computations allowing it to learn how to compute a larger set of
 functions\footnote{https://en.wikipedia.org/wiki/Universal\_approximation\_theorem};
 also it squashes the output of the network in $[0,1]$ allowing to
 interpret it in terms of \emph{confidence levels}.
 
 \begin{figure}
   \begin{minted}{python}
-    >>> import numpy as np ten_two_by_two_images_batch =
-    >>> np.random.rand(10, 4) ten_two_by_two_images_batch
-    >>> array([[0.54485176, 0.33854871, 0.45185129,
-    >>> 0.79884188], [0.41204776, 0.23552753, 0.04101023,
-    >>> 0.47883844], [0.25544491, 0.7610509 , 0.49307137,
-    >>> 0.6098213 ], [0.02545156, 0.70459456, 0.22067103,
-    >>> 0.64743811], [0.92359354, 0.96497353, 0.45790538,
-    >>> 0.49380769], [0.13330072, 0.22947966, 0.02996348,
-    >>> 0.69954114], [0.38397249, 0.30473362, 0.87023559,
-    >>> 0.90153084], [0.77056319, 0.94843128, 0.39095345,
-    >>> 0.50572861], [0.90112077, 0.19240995, 0.48437166,
-    >>> 0.46200152], [0.98589042, 0.2013479 , 0.86091217,
-    >>> 0.55886214]]) with tf.Session() as session: ... #
-    >>> we're _feeding_ the X placeholder with an actual
-    >>> numpy array ... session.run(probabilities,
-    >>> feed_dict={X: ten_two_by_two_images_batch}) ...
-    >>> array([[0.03751625, 0.8651346 , 0.05245555,
-    >>> 0.04489357], [0.11873736, 0.6301607 , 0.17646323,
-    >>> 0.07463871], [0.06252376, 0.82338244, 0.07284217,
-    >>> 0.04125158], [0.12086256, 0.6911012 , 0.14362463,
-    >>> 0.04441159], [0.03662292, 0.8575108 , 0.04834893,
-    >>> 0.05751737], [0.12984137, 0.63064647, 0.1834405 ,
-    >>> 0.05607158], [0.01711418, 0.93650085, 0.02116078,
-    >>> 0.02522417], [0.04886489, 0.83023334, 0.06332602,
-    >>> 0.05757581], [0.033136 , 0.84808177, 0.05061754,
-    >>> 0.06816475], [0.01250888, 0.9262628 , 0.01797607,
-    >>> 0.0432523 ]], dtype=float32) # ^^^^^^^^^ the last
-    >>> image is of the second class with a confidence of
-    >>> 92%
+    >>> import numpy as np
+    >>> batch = np.random.rand(10, 4)
+    >>> batch
+    >>> array([[0.54485176, 0.33854871, 0.45185129, 0.79884188],
+      [0.41204776, 0.23552753, 0.04101023, 0.47883844],
+      [0.25544491, 0.7610509 , 0.49307137, 0.6098213 ],
+      [0.02545156, 0.70459456, 0.22067103, 0.64743811],
+      [0.92359354, 0.96497353, 0.45790538, 0.49380769],
+      [0.13330072, 0.22947966, 0.02996348, 0.69954114],
+      [0.38397249, 0.30473362, 0.87023559, 0.90153084],
+      [0.77056319, 0.94843128, 0.39095345, 0.50572861],
+      [0.90112077, 0.19240995, 0.48437166, 0.46200152],
+      [0.98589042, 0.2013479 , 0.86091217, 0.55886214]])
+    >>> with tf.Session() as session:
+    ...     session.run(probabilities, feed_dict={X: batch})
+    ...
+    >>> array([[0.03751625, 0.8651346 , 0.05245555, 0.04489357],
+      [0.11873736, 0.6301607 , 0.17646323, 0.07463871],
+      [0.06252376, 0.82338244, 0.07284217, 0.04125158],
+      [0.12086256, 0.6911012 , 0.14362463, 0.04441159],
+      [0.03662292, 0.8575108 , 0.04834893, 0.05751737],
+      [0.12984137, 0.63064647, 0.1834405 , 0.05607158],
+      [0.01711418, 0.93650085, 0.02116078, 0.02522417],
+      [0.04886489, 0.83023334, 0.06332602, 0.05757581],
+      [0.033136 , 0.84808177, 0.05061754, 0.06816475],
+      [0.01250888, 0.9262628 , 0.01797607, 0.0432523 ]], dtype=float32)
   \end{minted}
+  \caption{Running a computational graph within a session}
   \label{fig:use-session}
-  \caption{}
+\end{figure}
+
+\begin{figure}
+  \begin{minted}{python}
+    >>> W = tf.Variable(W)
+    >>> b = tf.Variable(b)
+    >>> logits = tf.matmul(X, W) + b # redefine logits using variables 
+    >>> probabilities = tf.nn.softmax(logits)
+  \end{minted}
+  \caption{Making variables out of \texttt{W} and \texttt{b}}
+  \label{fig:making-variables}
 \end{figure}
 
 Now, to get results out of the graph you need what's called a
 \emph{session} in TensorFlow. Basically a session \emph{powers on} the
 graph, allowing you to run the computational graph with your own data
-and get actual tensors of actual numbers out of it. In Figure
-\ref{fig:use-session} we create a session to get likelihood for a batch
-of \( 2 \times 2 \) images. Of course building neural networks is
-pretty useless if you can't train them. In fact the probabilities in
-Figure \ref{fig:use-session} are totally non-sense: they're only based
-on the random weights and biases randomly extracted from a uniform
-distribution. There's no training set and no training phase yet. To
-train a network in TensorFlow we need a \texttt{tf.Variable}. A
-variable in TensorFlow is a tensor whose value persists across sessions
-and that session can modify. This allows you to basically add
-parameters to your computational graphs, allowing to compute different
-functions on the same graph. That, combined with a learning procedure
-that modifies the \texttt{tf.Variable}s make the model \emph{learning}.
-
-To build a \texttt{tf.Variable} in TensorFlow you can just
-wrap an existing tensor. In the example above, the part of
-the graph that you want to parameterize are the weight
-matrix $W$ and the bias vector $b$.
-
-\begin{figure}
-  \begin{minted}{python}
-    W = tf.Variable(W) b = tf.Variable(b) logits =
-    tf.matmul(X, W) + b # redefine logits: using different
-    tensors now probabilities = tf.nn.softmax(logits)
-  \end{minted}
-  \caption{}
-\end{figure}
-
-To perform training we now need a training set. A training
-set in this example would consist of several \(2 \times 2\)
-images and a label associated to each image representing the
-class of that image.
-
-\emph{Training} basically means minimizing a loss function
-between the provided labels of the training set and the
-labels guessed by the neural network. The loss function
-we're going to use is called \emph{cross-entropy} and
-TensorFlow implements it via
-\texttt{tf.nn.softmax\_cross\_entropy\_with\_logits\_v2}.
+and get actual tensors of actual numbers out of it. Of course building
+neural networks is pretty useless if you can't train them. In fact the
+probabilities in Figure \ref{fig:use-session} are totally non-sense:
+they're only based on the random weights and biases randomly extracted
+from a uniform distribution. There's no training set and no training
+phase yet. To train a network in TensorFlow we need a
+\texttt{tf.Variable}. A variable in TensorFlow is a tensor whose value
+persists across sessions and that session can modify. This allows you
+to basically add parameters to your computational graphs, allowing to
+iteratively change the function computed on the graph. That, combined
+with a learning procedure that modifies the \texttt{tf.Variable}s to
+reduce the distance from the target function to the actual function
+computed by the network, make the model \emph{learning}.In the current
+example, the part of the graph that you want the learning procedure to
+modify are $W$ and $b$. As in Figure \ref{fig:making-variables} to
+build a \texttt{tf.Variable} in TensorFlow you can just wrap an
+existing tensor.
 
 \begin{figure}
   \begin{minted}{python}
@@ -259,44 +247,48 @@ TensorFlow implements it via
     labels=y_true)
   \end{minted}
   \caption{}
+  \label{fig:cross-entropy}
 \end{figure}
-
-To minimize the cross-entropy we're using the ``gradient
-descent algorithm'' -- a minimization technique that works
-iteratively. TensorFlow implements that algorithm via the
-\texttt{GradientDescentOptimizer} class. Instances of that
-class expose a \texttt{minimize} method that returns a
-tensor that each time you run it in a session will modify
-the graph's \texttt{tf.Variable}s, trying to lower the value
-of the loss function.
 
 \begin{figure}
   \begin{minted}{python}
     from tf.train import GradientDescentOptimizer as SGD
-    optimizer =
-    SGD(learning_rate=0.5).minimize(cross_entropy)
+    optimizer = SGD(learning_rate=0.5).minimize(cross_entropy)
 
     with tf.Session() as session:
-    session.run(tf.global_variables_initializer()) # needed.
+        session.run(tf.global_variables_initializer()) # needed.
 
-    n_training_steps = 10 for i in range(n_training_steps):
-    images, classes = next_batch() # fictitious function
-    returning batches from the training set
+    n_training_steps = 10
+    for i in range(n_training_steps):
+        images, classes = next_batch()
 
-        with tf.Session() as session: session.run(optimizer,
-        feed_dict={X: images, y_true: classes})
+        with tf.Session() as session:
+            session.run(optimizer, feed_dict={X: images, y_true: classes})
   \end{minted}
-  \caption{Manually training a TensorFlow neural network}
-  \label{fig:training}
+  \caption{Training a feedforward neural network built with TensorFlow}
+  \label{fig:training-network}
 \end{figure}
 
-A typical training phase in TensorFlow would like the one in
-Figure \ref{fig:training}; as you increase the training
-steps, \texttt{W} and \texttt{b} will be modified pushing
-the value of the loss function towards a local minimum. This
-should make the model correctly classify images similar to
-those in the training set (though in general a low value for
-the loss function doesn't always mean good classifications).
+The last thing we want to do before abandoning this example is to train
+the network. To perform training we now need a training set. As
+explained in Chapter \ref{ch:background}, a training set consist of a
+batch of data and a label associated to each input, representing the
+class of that data. As \emph{training} basically means minimizing a
+loss function between the provided labels of the training set and the
+labels guessed by the neural network, we need a loss function: as in
+Figure \ref{fig:cross-entropy}, we're using
+\texttt{tf.nn.softmax\_cross\_entropy\_with\_logits\_v2}\footnote{https://en.wikipedia.org/wiki/Cross\_entropy\#Cross-entropy\_error\_function\_and\_logistic\_regression}.
+The gradient descent
+algorithm\footnote{https://en.wikipedia.org/wiki/Gradient\_descent} is
+then used to iteratively minimize the cross-entropy computed against
+the network output. TensorFlow implements that algorithm via
+\texttt{GradientDescentOptimizer.minimize()} that returns an operation
+that each time you run in a session will modify the graph's
+\texttt{tf.Variable}s, in the quest of lowering the value of the loss
+function. We can build a loop to train the network over and over, as in
+Figure \ref{fig:training-network}. This will push the loss function
+toward a local minimum; hopefully a useful one, i.e. a minimum that
+corresponds to good results even on data outside the training set.
 
 \section{Keras}
 \label{sec:keras}
