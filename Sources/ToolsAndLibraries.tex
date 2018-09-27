@@ -30,13 +30,13 @@ buy computational power to run your own code.
 \end{figure}
 
 TensorFlow is a C++ framework for Machine Learning released by Google.
-It uses a programming model called Data Flow. While that allows
-parallel and distributed computation, it can be quite daunting to use
-when tinkering. In fact, operations to perform on data are first
+It uses a peculiar programming model called Data Flow. While that
+allows parallel and distributed computation, it can be quite daunting
+to use when tinkering. In fact, operations to perform on data are first
 described and only later executed. I believe this can be
 counter-intuitive for most people. For example, in Figure
 \ref{fig:fortytwo} \texttt{symbol} doesn't contain a reference to the
-integer 42 -- as opposed to what would have been if \texttt{symbol} was
+integer 42 --- as opposed to what would have been if \texttt{symbol} was
 an \texttt{int} variable. Instead it contains a reference to a node of
 the \emph{computational graph} (a description of the computation to
 perform on data in terms of nodes and edges) which will always output
@@ -79,12 +79,12 @@ tensors.\footnote{This distinction between nodes and edges is important
   more from a formal standpoint than a practical one: actually thinking
   of tensors as nodes makes no difference to the best of my knowledge.}
 
-Figure \ref{fig:easy-graph} shows a very simple computational graph.
-It's the one associated to an addition of two \texttt{tf.float32}'s
-(i.e. two tensors made of 32-bit float numbers). The first two nodes
-\texttt{a} and \texttt{b} output one tensor each. Those are used to
-feed the \texttt{add} node that will output the tensor resulting from
-the sum of \texttt{a} and \texttt{b}.
+For example, Figure \ref{fig:easy-graph} shows a very simple
+computational graph. It's the one associated to an addition of two
+\texttt{tf.float32}'s (i.e. two tensors made of 32-bit float numbers):
+the first two nodes \texttt{a} and \texttt{b} output one tensor each;
+those are used to feed the \texttt{add} node that will output the
+tensor resulting from the sum of \texttt{a} and \texttt{b}.
 
 \begin{figure}
   \centering
@@ -222,36 +222,34 @@ Now, to get results out of the graph you need what's called a
 \emph{session} in TensorFlow. Basically a session \emph{powers on} the
 graph, allowing you to run the computational graph with your own data
 and get actual tensors of actual numbers out of it. Of course building
-neural networks is pretty useless if you can't train them. In fact the
-probabilities in Figure \ref{fig:use-session} are totally non-sense:
-they're only based on the random weights and biases randomly extracted
-from a uniform distribution. There's no training set and no training
-phase yet. To train a network in TensorFlow we need a
-\texttt{tf.Variable}. A variable in TensorFlow is a tensor whose value
-persists across sessions and that session can modify. This allows you
-to basically add parameters to your computational graphs, allowing to
-iteratively change the function computed on the graph. That, combined
-with a learning procedure that modifies the \texttt{tf.Variable}s to
-reduce the distance from the target function to the actual function
-computed by the network, make the model \emph{learning}.In the current
-example, the part of the graph that you want the learning procedure to
-modify are $W$ and $b$. As in Figure \ref{fig:making-variables} to
-build a \texttt{tf.Variable} in TensorFlow you can just wrap an
-existing tensor.
+neural networks is pretty useless if you can't train them: at first the
+whole output is only based on the random weights and biases randomly
+extracted from a uniform distribution --- for example, probabilities in
+Figure \ref{fig:use-session} are totally non-sense. There's no training
+set and no training phase yet. To train a network in TensorFlow we need
+a \texttt{tf.Variable}. A variable in TensorFlow is a tensor whose
+value persists across sessions and that session can modify. This allows
+you to basically add parameters to your computational graphs, allowing
+to iteratively change the function computed on the graph. That,
+combined with a learning procedure that modifies the
+\texttt{tf.Variable}s to reduce the distance from the target function
+to the actual function computed by the network, make the model
+\emph{learning}. In the current example, the part of the graph that you
+want the learning procedure to modify are $W$ and $b$. As in Figure
+\ref{fig:making-variables} to build a \texttt{tf.Variable} in
+TensorFlow you can just wrap an existing tensor.
 
 \begin{figure}
   \begin{minted}{python}
-    y_true = tf.placeholder(shape=(None,), dtype=tf.float32)
-    cross_entropy =
-    tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits,
-    labels=y_true)
+    >>> y_true = tf.placeholder(shape=(None,), dtype=tf.float32)
+    >>> cross_entropy = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y_true)
   \end{minted}
-  \caption{}
+  \caption{Creating the cross-entropy operation}
   \label{fig:cross-entropy}
 \end{figure}
 
 \begin{figure}
-  \begin{minted}{python}
+  \begin{minted}[linenos]{python}
     from tf.train import GradientDescentOptimizer as SGD
     optimizer = SGD(learning_rate=0.5).minimize(cross_entropy)
 
@@ -269,14 +267,14 @@ existing tensor.
   \label{fig:training-network}
 \end{figure}
 
-The last thing we want to do before abandoning this example is to train
-the network. To perform training we now need a training set. As
-explained in Chapter \ref{ch:background}, a training set consist of a
-batch of data and a label associated to each input, representing the
-class of that data. As \emph{training} basically means minimizing a
-loss function between the provided labels of the training set and the
-labels guessed by the neural network, we need a loss function: as in
-Figure \ref{fig:cross-entropy}, we're using
+The last thing we want to do before abandoning this example is the
+actual training of the network. To perform training we need a training
+set. As explained in Chapter \ref{ch:background}, a training set
+consist of a batch of data and a label associated to each input,
+representing the class of that data. As \emph{training} basically means
+minimizing a loss function between the provided labels of the training
+set and the labels guessed by the neural network, we need a loss
+function: as in Figure \ref{fig:cross-entropy}, we're using
 \texttt{tf.nn.softmax\_cross\_entropy\_with\_logits\_v2}\footnote{https://en.wikipedia.org/wiki/Cross\_entropy\#Cross-entropy\_error\_function\_and\_logistic\_regression}.
 The gradient descent
 algorithm\footnote{https://en.wikipedia.org/wiki/Gradient\_descent} is
