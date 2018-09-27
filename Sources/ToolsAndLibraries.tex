@@ -280,7 +280,7 @@ The gradient descent
 algorithm\footnote{https://en.wikipedia.org/wiki/Gradient\_descent} is
 then used to iteratively minimize the cross-entropy computed against
 the network output. TensorFlow implements that algorithm via
-\texttt{GradientDescentOptimizer.minimize()} that returns an operation
+\texttt{GradientDescentOptimizer.minimize(loss)} that returns an operation
 that each time you run in a session will modify the graph's
 \texttt{tf.Variable}s, in the quest of lowering the value of the loss
 function. We can build a loop to train the network over and over, as in
@@ -390,23 +390,71 @@ adversarial examples. See Figure
 \section{Scikit-learn}
 \label{sec:sklearn}
 
-Scikit-learn is a Python library written by David Cournapeau
-providing a number of models, learning algorithms and other
-utilities for Machine Learning. It's perfect for fast
-prototyping as it uses a simple and consistent API and
-handles numpy arrays or even Python lists.
+scikit-learn is a Python library written by David Cournapeau providing
+a number of models, learning algorithms and data manipulation utilities
+for Machine Learning. It's pretty popular for fast prototyping as it
+uses a simple and consistent API, with the ability to handle numpy
+arrays or even Python lists --- instead of having to learn about the
+computational graph.
 
-I've used scikit-learn to borrow a couple of decomposition
-algorithms (PCA, FastICA, ...) without having to implement
-them. This required a bit of reasoning as reusing
-scikit-learn algorithms on TensorFlow graphs was not
-straightforward.
+I've used scikit-learn to reuse a couple of decomposition
+algorithms\footnote{http://scikit-learn.org/0.20/modules/classes.html\#module-sklearn.decomposition}
+without having to implement them. This required a bit of thinking as
+while Keras and TensorFlow use a lot the computational graph,
+scikit-learn is completely oblivious of that structure. Making use of
+all the three libraries together required a bit of thinking.
+
+\begin{figure}
+  \begin{minted}[linenos]{python}
+  import sklearn.decomposition
+  pca = sklearn.decomposition.PCA(n_components=100)
+  pca.fit(training_set)
+
+  batch = next_batch()
+  filtered_batch = pca.inverse_transform(pca.transform(batch))
+  \end{minted}
+  \caption{Using \texttt{sklearn.decomposition.PCA} to get a
+    \emph{filtered} image}
+  \label{fig:transform-inverse_transform}
+\end{figure}
+
+The way I've used scikit-learn decomposition algorithm has been by
+leveraging classes exposing both a \texttt{transform(X)} and a
+\texttt{inverse\_trasform(X)}. This way I built \emph{filters} that
+\emph{reduced} the amount of information in the original data. See
+Figure \ref{fig:transform-inverse_transform}.
 
 \section{Google Cloud Platform}
 \label{sec:google-cloud-platform}
 
-Google Cloud Platform is a set of services that allows
-people to buy computational power from Google. In our case,
-we used Google Cloud Platform to get access to a GPU for few
-dollars a month. That made running experiments a lot faster
-in many cases.
+Google Cloud Platform is a set of services that allows people to buy
+computational power from Google. In our case, we used Google Cloud
+Platform to get access to a GPU for few dollars a
+month\footnote{https://cloud.google.com/blog/products/gcp/introducing-improved-pricing-for-preemptible-gpus}.
+Since we had \$300 of free credit we chose an expensive machine type
+``n1-standard-16 (16 vCPUs, 60 GB memory)'', CPU platform ``Intel%
+Haswell'' and as for GPUs ``1 x NVIDIA Tesla P100''. That made running
+experiments a lot faster in many cases.
+
+\begin{figure}
+  \begin{minted}{text}
+  [g@x220 ~]$ gcloud compute ssh root@bowser -- -X
+  No zone specified. Using zone [us-east1-b] for instance: [bowser].
+  Welcome to Ubuntu 16.04.5 LTS (GNU/Linux 4.15.0-1014-gcp x86_64)
+
+  * Documentation:  https://help.ubuntu.com
+  * Management:     https://landscape.canonical.com
+  * Support:        https://ubuntu.com/advantage
+
+    Get cloud support with Ubuntu Advantage Cloud Guest:
+      http://www.ubuntu.com/business/services/cloud
+
+  0 packages can be updated.
+  0 updates are security updates.
+
+
+  Last login: Thu Sep 27 15:35:52 2018 from 79.24.139.192
+  root@bowser:~# 
+  \end{minted}
+  \caption{Using \texttt{gcloud} to connect via ssh to Google remote \emph{machine}}
+\end{figure}
