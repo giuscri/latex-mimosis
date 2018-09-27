@@ -291,54 +291,101 @@ corresponds to good results even on data outside the training set.
 \section{Keras}
 \label{sec:keras}
 
-Keras is a high level library for building Machine Learning
-models. It consists of a simple API and bindings for a
-backend of choice, most notably TensorFlow. When you use the
-library, you're encouraged to use \emph{layers} instead of
-plain tensors. In fact the whole concept of TensorFlow
-tensors is hidden away by the library abstractions. To
-implement your model you stack layers -- basically you build
-a list of layers. For example, to implement a simple neural
-network one would stack a \texttt{Dense} layer of 4 hidden
-neurons and an \texttt{Activation} layer for the Softmax
-function.
+\begin{figure}
+  \begin{minted}[linenos]{python}
+    from keras.engine.base_layer import Layer
+    import tensorflow as tf
 
-\begin{minted}{python}
-  from keras.models import Sequential model = Sequential([
-    Dense(batch_input_shape=(None, 4), units=4),
-    Activation('softmax') ])
-\end{minted}
+    class Add42(Layer):
+        def __init__(self):
+            self.fortytwo = tf.constant(42)
 
-Under the hood, a \texttt{Layer} is simply a callable object
-whose \texttt{\_\_call()\_\_} method takes a TensorFlow
-tensor \texttt{X} and manipulates it. For example a simple
-custom one would be
-\begin{minted}{python}
-  from keras.engine.base_layer import Layer import
-  tensorflow as tf class Add42(Layer): def __init__(self):
-  self.fortytwo = tf.constant(42)
+        def __call__(self, X):
+            return tf.add(X, self.fortytwo)
 
-      def __call__(self, X): return tf.add(X, self.fortytwo)
-\end{minted}
+    model = Sequential([Dense(...), Add42(), ...])
+  \end{minted}
+  \caption{A toy-example for a Keras layer}
+  \label{fig:toy-layer}
+\end{figure}
 
-While the idea is beginner friendly -- as it allows people
-to immediately concentrate on model's architecture instead
-of thinking about tensors -- at the time of this writing the
-abstraction can become leaky when things go wrong, needing
-the programmer to know about the TensorFlow computational
-graphs to debug her program successfully.
+Keras\footnote{https://keras.io/} is a library for building Machine
+Learning models using a simple API that abstracts away the interface of
+a backend of choice, e.g. TensorFlow. When you use the library, you're
+encouraged to manipulate \emph{layers} instead of plain tensors. In
+fact the whole concept of \emph{tensors} is hidden away by the library.
+To implement your model you're expected to stack layers one on top the
+other, expressing a \emph{sequential} manipulation of the
+data\footnote{https://keras.io/\#getting-started-30-seconds-to-keras}.
+Under the hood, a \texttt{Layer} is simply a callable object whose
+\texttt{\_\_call()\_\_} method takes a TensorFlow tensor \texttt{X} and
+manipulates it --- see Figure \ref{fig:toy-layer}.
+
+\begin{figure}
+  \begin{minted}{python}
+    >>> from keras.models import Sequential
+    >>> model = Sequential([
+    ... Dense(batch_input_shape=(None, 4), units=4),
+    ... Activation('softmax')])
+  \end{minted}
+  \caption{Feedforward network using Keras layers}
+  \label{fig:feedforward-with-layers}
+\end{figure}
+
+As shown in Figure \ref{fig:feedforward-with-layers}, to implement the
+simple feedforward neural network described in \ref{sec:tensorflow} one
+would stack a \texttt{Dense} layer of 4 hidden neurons and an
+\texttt{Activation} layer implementing the softmax function. Compare
+that to the TensorFlow implementation and you'll see it's much more
+easier to read and to think about. This nicer API that allows
+to immediately think about model's architecture is paid an abstraction
+level that at the time of this writing in my opinion is not enough
+stable to allow programmers to be completely oblivious of the original
+backend --- in my case TensorFlow.
 
 \section{CleverHans}
 \label{sec:cleverhans}
 
-CleverHans is a library written by Google for building
-adversarial examples. It implements a variety of attacks
-against neural networks (FGS, T-FGS, Carlini and Wagner,
-...) and it's compatible with models built with Keras or
-plain TensorFlow. It uses the same computational graphs of
-TensorFlow to generate adversarial examples; again, as you
-use the library more and more understanding computational
-graphs becomes a necessity.
+CleverHans\footnote{https://www.cleverhans.io/} is a library for
+building adversarial examples written by Google, OpenAI and
+Pennsylvania State University. It implements a variety of
+attacks\footnote{https://cleverhans.readthedocs.io/en/latest/source/attacks.html}
+against neural networks and it's compatible with models built with
+Keras or just plain TensorFlow. It uses the same computational graphs
+of TensorFlow to generate adversarial examples, so again using the
+library knowing something about computational graphs helps.
+
+\begin{figure}
+  \begin{minted}[linenos]{python}
+  from cleverhans.attacks import FastGradientMethod
+  from cleverhans.utils_keras import KerasModelWrapper
+
+  # `model` is a Keras model
+  cleverhans_model = KerasModelWrapper(model)
+  attack = FastGradientMethod(cleverhans_model)
+
+  example_sym = attack.generate(model.input, **kwargs)
+  # example_sym will give the adversarial examples
+  # when run in a session.
+  \end{minted}
+  \caption{Generating adversarial examples using CleverHans}
+  \label{fig:cleverhans-attack-dot-generate}
+\end{figure}
+
+To generate adversarial examples for a given model CleverHans needs to
+be able to read some internals of the model --- inputs are generated in
+a white-box approach. CleverHans already provides a couple of utilities
+to do that \emph{model inspection} for some commonly used libraries ---
+e.g. for Keras there's a
+\texttt{KerasModelWrapper}\footnote{https://github.com/tensorflow/cleverhans/blob/66125be4e0e98686c5e005677263e52d3f3cea47/cleverhans/utils\_keras.py\#L101}
+--- transforming the model into an object that CleverHans is able to
+handle. Once a model has the interface CleverHans expects, it's
+possible to choose the attack technique via classes inhereting from the
+same \texttt{Attack} class. They are all exposing a \texttt{generate}
+method that will return a node of the corresponding computational
+graph; when you run it in a session it will return the related
+adversarial examples. See Figure
+\ref{fig:cleverhans-attack-dot-generate} for a short example.
 
 \section{Scikit-learn}
 \label{sec:sklearn}
