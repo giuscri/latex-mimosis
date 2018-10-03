@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+  \PYG{k+kn}{from} \PYG{n+nn}{cleverhans.attacks} \PYG{k+kn}{import} \PYG{n}{FastGradientMethod}
+  \PYG{k+kn}{from} \PYG{n+nn}{cleverhans.utils\PYGZus{}keras} \PYG{k+kn}{import} \PYG{n}{KerasModelWrapper}
+
+  \PYG{c+c1}{\PYGZsh{} `model` is a Keras model}
+  \PYG{n}{cleverhans\PYGZus{}model} \PYG{o}{=} \PYG{n}{KerasModelWrapper}\PYG{p}{(}\PYG{n}{model}\PYG{p}{)}
+  \PYG{n}{attack} \PYG{o}{=} \PYG{n}{FastGradientMethod}\PYG{p}{(}\PYG{n}{cleverhans\PYGZus{}model}\PYG{p}{)}
+
+  \PYG{n}{example\PYGZus{}sym} \PYG{o}{=} \PYG{n}{attack}\PYG{o}{.}\PYG{n}{generate}\PYG{p}{(}\PYG{n}{model}\PYG{o}{.}\PYG{n}{input}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+  \PYG{c+c1}{\PYGZsh{} example\PYGZus{}sym will give the adversarial examples}
+  \PYG{c+c1}{\PYGZsh{} when run in a session.}
+\end{Verbatim}

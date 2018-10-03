@@ -1,0 +1,28 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k+kn}{as} \PYG{n+nn}{np}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{batch} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{rand}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{)}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{batch}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{array}\PYG{p}{([[}\PYG{l+m+mf}{0.54485176}\PYG{p}{,} \PYG{l+m+mf}{0.33854871}\PYG{p}{,} \PYG{l+m+mf}{0.45185129}\PYG{p}{,} \PYG{l+m+mf}{0.79884188}\PYG{p}{],}
+      \PYG{p}{[}\PYG{l+m+mf}{0.41204776}\PYG{p}{,} \PYG{l+m+mf}{0.23552753}\PYG{p}{,} \PYG{l+m+mf}{0.04101023}\PYG{p}{,} \PYG{l+m+mf}{0.47883844}\PYG{p}{],}
+      \PYG{p}{[}\PYG{l+m+mf}{0.25544491}\PYG{p}{,} \PYG{l+m+mf}{0.7610509} \PYG{p}{,} \PYG{l+m+mf}{0.49307137}\PYG{p}{,} \PYG{l+m+mf}{0.6098213} \PYG{p}{],}
+      \PYG{p}{[}\PYG{l+m+mf}{0.02545156}\PYG{p}{,} \PYG{l+m+mf}{0.70459456}\PYG{p}{,} \PYG{l+m+mf}{0.22067103}\PYG{p}{,} \PYG{l+m+mf}{0.64743811}\PYG{p}{],}
+      \PYG{p}{[}\PYG{l+m+mf}{0.92359354}\PYG{p}{,} \PYG{l+m+mf}{0.96497353}\PYG{p}{,} \PYG{l+m+mf}{0.45790538}\PYG{p}{,} \PYG{l+m+mf}{0.49380769}\PYG{p}{],}
+      \PYG{p}{[}\PYG{l+m+mf}{0.13330072}\PYG{p}{,} \PYG{l+m+mf}{0.22947966}\PYG{p}{,} \PYG{l+m+mf}{0.02996348}\PYG{p}{,} \PYG{l+m+mf}{0.69954114}\PYG{p}{],}
+      \PYG{p}{[}\PYG{l+m+mf}{0.38397249}\PYG{p}{,} \PYG{l+m+mf}{0.30473362}\PYG{p}{,} \PYG{l+m+mf}{0.87023559}\PYG{p}{,} \PYG{l+m+mf}{0.90153084}\PYG{p}{],}
+      \PYG{p}{[}\PYG{l+m+mf}{0.77056319}\PYG{p}{,} \PYG{l+m+mf}{0.94843128}\PYG{p}{,} \PYG{l+m+mf}{0.39095345}\PYG{p}{,} \PYG{l+m+mf}{0.50572861}\PYG{p}{],}
+      \PYG{p}{[}\PYG{l+m+mf}{0.90112077}\PYG{p}{,} \PYG{l+m+mf}{0.19240995}\PYG{p}{,} \PYG{l+m+mf}{0.48437166}\PYG{p}{,} \PYG{l+m+mf}{0.46200152}\PYG{p}{],}
+      \PYG{p}{[}\PYG{l+m+mf}{0.98589042}\PYG{p}{,} \PYG{l+m+mf}{0.2013479} \PYG{p}{,} \PYG{l+m+mf}{0.86091217}\PYG{p}{,} \PYG{l+m+mf}{0.55886214}\PYG{p}{]])}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{k}{with} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{Session}\PYG{p}{()} \PYG{k}{as} \PYG{n}{session}\PYG{p}{:}
+    \PYG{o}{...}     \PYG{n}{session}\PYG{o}{.}\PYG{n}{run}\PYG{p}{(}\PYG{n}{probabilities}\PYG{p}{,} \PYG{n}{feed\PYGZus{}dict}\PYG{o}{=}\PYG{p}{\PYGZob{}}\PYG{n}{X}\PYG{p}{:} \PYG{n}{batch}\PYG{p}{\PYGZcb{})}
+    \PYG{o}{...}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{array}\PYG{p}{([[}\PYG{l+m+mf}{0.03751625}\PYG{p}{,} \PYG{l+m+mf}{0.8651346} \PYG{p}{,} \PYG{l+m+mf}{0.05245555}\PYG{p}{,} \PYG{l+m+mf}{0.04489357}\PYG{p}{],}
+      \PYG{p}{[}\PYG{l+m+mf}{0.11873736}\PYG{p}{,} \PYG{l+m+mf}{0.6301607} \PYG{p}{,} \PYG{l+m+mf}{0.17646323}\PYG{p}{,} \PYG{l+m+mf}{0.07463871}\PYG{p}{],}
+      \PYG{p}{[}\PYG{l+m+mf}{0.06252376}\PYG{p}{,} \PYG{l+m+mf}{0.82338244}\PYG{p}{,} \PYG{l+m+mf}{0.07284217}\PYG{p}{,} \PYG{l+m+mf}{0.04125158}\PYG{p}{],}
+      \PYG{p}{[}\PYG{l+m+mf}{0.12086256}\PYG{p}{,} \PYG{l+m+mf}{0.6911012} \PYG{p}{,} \PYG{l+m+mf}{0.14362463}\PYG{p}{,} \PYG{l+m+mf}{0.04441159}\PYG{p}{],}
+      \PYG{p}{[}\PYG{l+m+mf}{0.03662292}\PYG{p}{,} \PYG{l+m+mf}{0.8575108} \PYG{p}{,} \PYG{l+m+mf}{0.04834893}\PYG{p}{,} \PYG{l+m+mf}{0.05751737}\PYG{p}{],}
+      \PYG{p}{[}\PYG{l+m+mf}{0.12984137}\PYG{p}{,} \PYG{l+m+mf}{0.63064647}\PYG{p}{,} \PYG{l+m+mf}{0.1834405} \PYG{p}{,} \PYG{l+m+mf}{0.05607158}\PYG{p}{],}
+      \PYG{p}{[}\PYG{l+m+mf}{0.01711418}\PYG{p}{,} \PYG{l+m+mf}{0.93650085}\PYG{p}{,} \PYG{l+m+mf}{0.02116078}\PYG{p}{,} \PYG{l+m+mf}{0.02522417}\PYG{p}{],}
+      \PYG{p}{[}\PYG{l+m+mf}{0.04886489}\PYG{p}{,} \PYG{l+m+mf}{0.83023334}\PYG{p}{,} \PYG{l+m+mf}{0.06332602}\PYG{p}{,} \PYG{l+m+mf}{0.05757581}\PYG{p}{],}
+      \PYG{p}{[}\PYG{l+m+mf}{0.033136} \PYG{p}{,} \PYG{l+m+mf}{0.84808177}\PYG{p}{,} \PYG{l+m+mf}{0.05061754}\PYG{p}{,} \PYG{l+m+mf}{0.06816475}\PYG{p}{],}
+      \PYG{p}{[}\PYG{l+m+mf}{0.01250888}\PYG{p}{,} \PYG{l+m+mf}{0.9262628} \PYG{p}{,} \PYG{l+m+mf}{0.01797607}\PYG{p}{,} \PYG{l+m+mf}{0.0432523} \PYG{p}{]],} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{float32}\PYG{p}{)}
+\end{Verbatim}

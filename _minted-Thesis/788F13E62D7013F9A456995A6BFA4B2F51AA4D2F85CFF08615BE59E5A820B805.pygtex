@@ -1,0 +1,19 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+  [g@x220 \PYGZti{}]\PYGZdl{} gcloud compute ssh root@bowser \PYGZhy{}\PYGZhy{} \PYGZhy{}X
+  No zone specified. Using zone [us\PYGZhy{}east1\PYGZhy{}b] for instance: [bowser].
+  Welcome to Ubuntu 16.04.5 LTS (GNU/Linux 4.15.0\PYGZhy{}1014\PYGZhy{}gcp x86\PYGZus{}64)
+
+  * Documentation:  https://help.ubuntu.com
+  * Management:     https://landscape.canonical.com
+  * Support:        https://ubuntu.com/advantage
+
+    Get cloud support with Ubuntu Advantage Cloud Guest:
+      http://www.ubuntu.com/business/services/cloud
+
+  0 packages can be updated.
+  0 updates are security updates.
+
+
+  Last login: Thu Sep 27 15:35:52 2018 from 79.24.139.192
+  root@bowser:\PYGZti{}\PYGZsh{}
+\end{Verbatim}

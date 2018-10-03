@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{o}{[}g@x220 \PYGZti{}\PYG{o}{]}\PYGZdl{} gcloud compute instances start bowser
+No zone specified. Using zone \PYG{o}{[}us\PYGZhy{}east1\PYGZhy{}b\PYG{o}{]} \PYG{k}{for} instance: \PYG{o}{[}bowser\PYG{o}{]}.
+Starting instance\PYG{o}{(}s\PYG{o}{)} bowser...done.
+Updated \PYG{o}{[}https://www.googleapis.com/compute/v1/projects/please\PYGZhy{}give\PYGZhy{}me\PYGZhy{}the\PYGZhy{}power/zones/us\PYGZhy{}east1\PYGZhy{}b/instances/bowser\PYG{o}{]}.
+
+
+Updates are available \PYG{k}{for} some Cloud SDK components.  To install them,
+please run:
+  \PYGZdl{} gcloud components update
+\end{Verbatim}

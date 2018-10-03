@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+  \PYG{k+kn}{import} \PYG{n+nn}{sklearn.decomposition}
+  \PYG{n}{pca} \PYG{o}{=} \PYG{n}{sklearn}\PYG{o}{.}\PYG{n}{decomposition}\PYG{o}{.}\PYG{n}{PCA}\PYG{p}{(}\PYG{n}{n\PYGZus{}components}\PYG{o}{=}\PYG{l+m+mi}{100}\PYG{p}{)}
+  \PYG{n}{pca}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{training\PYGZus{}set}\PYG{p}{)}
+
+  \PYG{n}{batch} \PYG{o}{=} \PYG{n}{next\PYGZus{}batch}\PYG{p}{()}
+  \PYG{n}{filtered\PYGZus{}batch} \PYG{o}{=} \PYG{n}{pca}\PYG{o}{.}\PYG{n}{inverse\PYGZus{}transform}\PYG{p}{(}\PYG{n}{pca}\PYG{o}{.}\PYG{n}{transform}\PYG{p}{(}\PYG{n}{batch}\PYG{p}{))}
+\end{Verbatim}

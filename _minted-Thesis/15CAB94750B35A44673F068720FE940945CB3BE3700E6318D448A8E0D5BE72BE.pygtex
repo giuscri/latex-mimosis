@@ -1,0 +1,13 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k+kn}{from} \PYG{n+nn}{keras.engine.base\PYGZus{}layer} \PYG{k+kn}{import} \PYG{n}{Layer}
+    \PYG{k+kn}{import} \PYG{n+nn}{tensorflow} \PYG{k+kn}{as} \PYG{n+nn}{tf}
+
+    \PYG{k}{class} \PYG{n+nc}{Add42}\PYG{p}{(}\PYG{n}{Layer}\PYG{p}{):}
+        \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fortytwo} \PYG{o}{=} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{constant}\PYG{p}{(}\PYG{l+m+mi}{42}\PYG{p}{)}
+
+        \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}call\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{X}\PYG{p}{):}
+            \PYG{k}{return} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fortytwo}\PYG{p}{)}
+
+    \PYG{n}{model} \PYG{o}{=} \PYG{n}{Sequential}\PYG{p}{([}\PYG{n}{Dense}\PYG{p}{(}\PYG{o}{...}\PYG{p}{),} \PYG{n}{Add42}\PYG{p}{(),} \PYG{o}{...}\PYG{p}{])}
+\end{Verbatim}

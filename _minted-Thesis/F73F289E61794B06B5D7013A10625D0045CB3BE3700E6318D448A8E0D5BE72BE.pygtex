@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{k+kn}{from} \PYG{n+nn}{tf.nn} \PYG{k+kn}{import} \PYG{n}{tf\PYGZus{}cross\PYGZus{}entropy}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{y\PYGZus{}true} \PYG{o}{=} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{placeholder}\PYG{p}{(}\PYG{n}{shape}\PYG{o}{=}\PYG{p}{(}\PYG{n+nb+bp}{None}\PYG{p}{,),} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{tf}\PYG{o}{.}\PYG{n}{float32}\PYG{p}{)}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{cross\PYGZus{}entropy} \PYG{o}{=} \PYG{n}{tf\PYGZus{}cross\PYGZus{}entropy}\PYG{p}{(}\PYG{n}{logits}\PYG{o}{=}\PYG{n}{logits}\PYG{p}{,} \PYG{n}{labels}\PYG{o}{=}\PYG{n}{y\PYGZus{}true}\PYG{p}{)}
+\end{Verbatim}

@@ -1,0 +1,14 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k+kn}{from} \PYG{n+nn}{tf.train} \PYG{k+kn}{import} \PYG{n}{GradientDescentOptimizer} \PYG{k}{as} \PYG{n}{SGD}
+    \PYG{n}{optimizer} \PYG{o}{=} \PYG{n}{SGD}\PYG{p}{(}\PYG{n}{learning\PYGZus{}rate}\PYG{o}{=}\PYG{l+m+mf}{0.5}\PYG{p}{)}\PYG{o}{.}\PYG{n}{minimize}\PYG{p}{(}\PYG{n}{cross\PYGZus{}entropy}\PYG{p}{)}
+
+    \PYG{k}{with} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{Session}\PYG{p}{()} \PYG{k}{as} \PYG{n}{session}\PYG{p}{:}
+        \PYG{n}{session}\PYG{o}{.}\PYG{n}{run}\PYG{p}{(}\PYG{n}{tf}\PYG{o}{.}\PYG{n}{global\PYGZus{}variables\PYGZus{}initializer}\PYG{p}{())} \PYG{c+c1}{\PYGZsh{} needed.}
+
+    \PYG{n}{n\PYGZus{}training\PYGZus{}steps} \PYG{o}{=} \PYG{l+m+mi}{10}
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n\PYGZus{}training\PYGZus{}steps}\PYG{p}{):}
+        \PYG{n}{images}\PYG{p}{,} \PYG{n}{classes} \PYG{o}{=} \PYG{n}{next\PYGZus{}batch}\PYG{p}{()}
+
+        \PYG{k}{with} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{Session}\PYG{p}{()} \PYG{k}{as} \PYG{n}{session}\PYG{p}{:}
+            \PYG{n}{session}\PYG{o}{.}\PYG{n}{run}\PYG{p}{(}\PYG{n}{optimizer}\PYG{p}{,} \PYG{n}{feed\PYGZus{}dict}\PYG{o}{=}\PYG{p}{\PYGZob{}}\PYG{n}{X}\PYG{p}{:} \PYG{n}{images}\PYG{p}{,} \PYG{n}{y\PYGZus{}true}\PYG{p}{:} \PYG{n}{classes}\PYG{p}{\PYGZcb{})}
+\end{Verbatim}

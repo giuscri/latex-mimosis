@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{W} \PYG{o}{=} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{Variable}\PYG{p}{(}\PYG{n}{W}\PYG{p}{)}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{b} \PYG{o}{=} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{Variable}\PYG{p}{(}\PYG{n}{b}\PYG{p}{)}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{logits} \PYG{o}{=} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{matmul}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{W}\PYG{p}{)} \PYG{o}{+} \PYG{n}{b}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{c+c1}{\PYGZsh{} redefine logits using variables}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{probabilities} \PYG{o}{=} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{softmax}\PYG{p}{(}\PYG{n}{logits}\PYG{p}{)}
+\end{Verbatim}

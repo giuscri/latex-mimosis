@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+  \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{k+kn}{from} \PYG{n+nn}{keras.models} \PYG{k+kn}{import} \PYG{n}{Sequential}
+  \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{model} \PYG{o}{=} \PYG{n}{Sequential}\PYG{p}{([}
+  \PYG{o}{...} \PYG{n}{Dense}\PYG{p}{(}\PYG{n}{batch\PYGZus{}input\PYGZus{}shape}\PYG{o}{=}\PYG{p}{(}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{),} \PYG{n}{units}\PYG{o}{=}\PYG{l+m+mi}{4}\PYG{p}{),}
+  \PYG{o}{...} \PYG{n}{Activation}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}softmax\PYGZsq{}}\PYG{p}{)])}
+\end{Verbatim}

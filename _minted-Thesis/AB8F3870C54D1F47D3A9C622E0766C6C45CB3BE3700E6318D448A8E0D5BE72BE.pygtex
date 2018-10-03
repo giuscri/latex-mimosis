@@ -1,0 +1,23 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+  \PYG{n+nd}{@lru\PYGZus{}cache}\PYG{p}{()}
+  \PYG{k}{def} \PYG{n+nf}{\PYGZus{}\PYGZus{}fast\PYGZus{}gradient\PYGZus{}sign\PYGZus{}tf\PYGZus{}symbols}\PYG{p}{(}\PYG{n}{model}\PYG{p}{,} \PYG{n}{serializedX}\PYG{p}{,} \PYG{n}{serializedy\PYGZus{}target}\PYG{p}{):}
+      \PYG{n}{X} \PYG{o}{=} \PYG{n}{loads}\PYG{p}{(}\PYG{n}{serializedX}\PYG{p}{)}
+      \PYG{n}{y\PYGZus{}target} \PYG{o}{=} \PYG{n}{loads}\PYG{p}{(}\PYG{n}{serializedy\PYGZus{}target}\PYG{p}{)}
+
+      \PYG{n}{cleverhans\PYGZus{}model} \PYG{o}{=} \PYG{n}{KerasModelWrapper}\PYG{p}{(}\PYG{n}{model}\PYG{p}{)}
+      \PYG{n}{attack} \PYG{o}{=} \PYG{n}{FastGradientMethod}\PYG{p}{(}\PYG{n}{cleverhans\PYGZus{}model}\PYG{p}{)}
+
+      \PYG{n}{X\PYGZus{}sym} \PYG{o}{=} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{placeholder}\PYG{p}{(}\PYG{n}{tf}\PYG{o}{.}\PYG{n}{float32}\PYG{p}{,} \PYG{n}{shape}\PYG{o}{=}\PYG{n}{model}\PYG{o}{.}\PYG{n}{input}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{)}
+      \PYG{n}{eta\PYGZus{}sym} \PYG{o}{=} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{placeholder}\PYG{p}{(}\PYG{n}{tf}\PYG{o}{.}\PYG{n}{float32}\PYG{p}{)}
+      \PYG{k}{if} \PYG{n}{y\PYGZus{}target} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+          \PYG{n}{one\PYGZus{}hot\PYGZus{}y\PYGZus{}target\PYGZus{}sym} \PYG{o}{=} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{placeholder}\PYG{p}{(}\PYG{n}{tf}\PYG{o}{.}\PYG{n}{float32}\PYG{p}{,} \PYG{n}{shape}\PYG{o}{=}\PYG{n}{model}\PYG{o}{.}\PYG{n}{output}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{)}
+      \PYG{k}{else}\PYG{p}{:}
+          \PYG{n}{one\PYGZus{}hot\PYGZus{}y\PYGZus{}target\PYGZus{}sym} \PYG{o}{=} \PYG{n+nb+bp}{None}
+
+      \PYG{n}{kwargs} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+s+s2}{\PYGZdq{}eps\PYGZdq{}}\PYG{p}{:} \PYG{n}{eta\PYGZus{}sym}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}ord\PYGZdq{}}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{inf}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}clip\PYGZus{}min\PYGZdq{}}\PYG{p}{:} \PYG{l+m+mf}{0.}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}clip\PYGZus{}max\PYGZdq{}}\PYG{p}{:} \PYG{l+m+mf}{1.}\PYG{p}{\PYGZcb{}}
+      \PYG{k}{if} \PYG{n}{y\PYGZus{}target} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+          \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}y\PYGZus{}target\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{one\PYGZus{}hot\PYGZus{}y\PYGZus{}target\PYGZus{}sym}
+
+      \PYG{n}{example\PYGZus{}sym} \PYG{o}{=} \PYG{n}{attack}\PYG{o}{.}\PYG{n}{generate}\PYG{p}{(}\PYG{n}{X\PYGZus{}sym}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+      \PYG{k}{return} \PYG{n}{X\PYGZus{}sym}\PYG{p}{,} \PYG{n}{one\PYGZus{}hot\PYGZus{}y\PYGZus{}target\PYGZus{}sym}\PYG{p}{,} \PYG{n}{example\PYGZus{}sym}\PYG{p}{,} \PYG{n}{eta\PYGZus{}sym}
+\end{Verbatim}

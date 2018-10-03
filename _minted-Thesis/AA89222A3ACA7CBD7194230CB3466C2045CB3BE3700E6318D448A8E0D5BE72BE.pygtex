@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{k+kn}{import} \PYG{n+nn}{tensorflow} \PYG{k+kn}{as} \PYG{n+nn}{tf}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{symbol} \PYG{o}{=} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{constant}\PYG{p}{(}\PYG{l+m+mi}{42}\PYG{p}{)}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{symbol}
+    \PYG{o}{\PYGZlt{}}\PYG{n}{tf}\PYG{o}{.}\PYG{n}{Tensor} \PYG{l+s+s1}{\PYGZsq{}Const:0\PYGZsq{}} \PYG{n}{shape}\PYG{o}{=}\PYG{p}{()} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{int32}\PYG{o}{\PYGZgt{}}
+\end{Verbatim}

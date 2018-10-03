@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{k+kn}{import} \PYG{n+nn}{tensorflow} \PYG{k+kn}{as} \PYG{n+nn}{tf}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{W} \PYG{o}{=} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{random\PYGZus{}normal}\PYG{p}{(}\PYG{n}{shape}\PYG{o}{=}\PYG{p}{(}\PYG{l+m+mi}{4}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{))}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{b} \PYG{o}{=} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{random\PYGZus{}normal}\PYG{p}{(}\PYG{n}{shape}\PYG{o}{=}\PYG{p}{(}\PYG{l+m+mi}{4}\PYG{p}{,))}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{X} \PYG{o}{=} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{placeholder}\PYG{p}{(}\PYG{n}{shape}\PYG{o}{=}\PYG{p}{(}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{),} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{tf}\PYG{o}{.}\PYG{n}{float32}\PYG{p}{)}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{logits} \PYG{o}{=} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{matmul}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{W}\PYG{p}{)} \PYG{o}{+} \PYG{n}{b}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{probabilities} \PYG{o}{=} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{softmax}\PYG{p}{(}\PYG{n}{logits}\PYG{p}{)}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{probabilities}
+    \PYG{o}{\PYGZlt{}}\PYG{n}{tf}\PYG{o}{.}\PYG{n}{Tensor} \PYG{l+s+s1}{\PYGZsq{}Softmax:0\PYGZsq{}} \PYG{n}{shape}\PYG{o}{=}\PYG{p}{(}\PYG{err}{?}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{)} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{float32}\PYG{o}{\PYGZgt{}}
+\end{Verbatim}

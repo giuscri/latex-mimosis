@@ -3,7 +3,7 @@
 \label{ch:tools-and-libraries}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this chapter I describe the tools and libraries that I used to
+In this chapter we describe the tools and libraries that we used to
 implement the set of experiments described in Chapter
 \ref{ch:robust-networks}. This chapter is organized as follows: Section
 \ref{sec:tensorflow} is dedicated to
@@ -11,7 +11,7 @@ TensorFlow\footnote{https://www.tensorflow.org/} and its computational
 graph; Section \ref{sec:keras} is for Keras, a high-level API for
 TensorFlow; Section \ref{sec:cleverhans} describes CleverHans, a
 library to generate adversarial examples; Section \ref{sec:sklearn}
-talks about scikit-learn, a library for building and training Machine
+talks about Scikit-learn, a library for building and training Machine
 Learning models while Section \ref{sec:google-cloud-platform} briefly
 mentions Google Cloud Platform, a service by Google that allows you to
 buy computational power to run your own code.
@@ -34,7 +34,7 @@ TensorFlow is a C++ framework for Machine Learning released by Google.
 It uses a peculiar programming model called Data Flow. While that
 allows parallel and distributed computation, it can be quite daunting
 to use when tinkering. In fact, operations to perform on data are first
-described and only later executed. I believe this can be
+described and only later executed. We believe this can be
 counter-intuitive for most people. For example, in Figure
 \ref{fig:fortytwo} \texttt{symbol} doesn't contain a reference to the
 integer 42 --- as opposed to what would have been if \texttt{symbol} was
@@ -44,16 +44,13 @@ perform on data in terms of nodes and edges) which will always output
 42. In TensorFlow computation is done by connecting one or more of
 these nodes to other nodes, letting \emph{tensors} (``the main object
 you manipulate and pass around [in TensorFlow]''%
-\footnote{https://web.archive.org/web/20180921135324/https://www.tensorflow.org/guide/tensors})
+\footnote{https://www.tensorflow.org/guide/tensors})
 move around this graph (in case of Figure \ref{fig:fortytwo}, the
 tensor is the output of the only one node in the graph: the tensor is
 42). Problem is that in general until you don't run the computational
 graph it's hard to determine what's going to be the value of a tensor,
 that is the \emph{output} of the computational graph. This is slowing
 down exploratory analysis.
-
-\subsection{About the computational graph and TensorFlow's Python API}
-\label{subsec:computational-graph}
 
 \begin{figure}
   \centering
@@ -65,16 +62,16 @@ down exploratory analysis.
   (add); \draw [->] (a) ..controls (61.417bp,61.782bp) and
   (72.527bp,58.484bp) .. (add);
   \end{tikzpicture}
-  \caption[]{Crazy simple computational graph}
+  \caption[]{One of the simplest computational graph possible.}
   \label{fig:easy-graph}
 \end{figure}
 
-TensorFlow's computational graph is a fundamental part of the
+By the way TensorFlow's computational graphs are a fundamental part of the
 framework. A computational graph is a directed graph representing a
-computation involving tensors. A tensor in TensorFlow is a
+computation involving tensors. A tensor in TensorFlow is any
 multi-dimensional array: it can be a scalar, a matrix, a batch of RGB
-images (which is a 4D vector\footnote{If you always thought human can't
-  visualize four dimensions all at once, think again.}), etc. Each node
+images (which is a 4D vector\footnote{If you always thought humans can't
+  visualize four dimensions all at once, think of this example.}), etc. Each node
 represents an operation on tensors, while edges represent
 tensors.\footnote{This distinction between nodes and edges is important
   more from a formal standpoint than a practical one: actually thinking
@@ -87,67 +84,23 @@ the first two nodes \texttt{a} and \texttt{b} output one tensor each;
 those are used to feed the \texttt{add} node that will output the
 tensor resulting from the sum of \texttt{a} and \texttt{b}.
 
-\begin{figure}
-  \centering
-  \begin{tikzpicture}[>=latex,line join=bevel,]
-    \node (s3) at (27.0bp,90.0bp) [draw,ellipse] {}; \node
-    (s2) at (243.0bp,90.0bp) [draw,ellipse] {}; \node (s1)
-    at (171.0bp,90.0bp) [draw,ellipse] {}; \node (s4) at
-    (99.0bp,90.0bp) [draw,ellipse] {}; \node (d4) at
-    (99.0bp,18.0bp) [draw,ellipse] {}; \node (d2) at
-    (243.0bp,18.0bp) [draw,ellipse] {}; \node (d3) at
-    (27.0bp,18.0bp) [draw,ellipse] {}; \node (d1) at
-    (171.0bp,18.0bp) [draw,ellipse] {}; \draw [->] (s1)
-    ..controls (171.0bp,64.131bp) and (171.0bp,54.974bp) ..
-    (d1); \draw [->] (s2) ..controls (196.78bp,66.889bp) and
-    (157.24bp,47.119bp) .. (d4); \draw [->] (s3) ..controls
-    (89.947bp,69.018bp) and (165.24bp,43.919bp) .. (d2);
-    \draw [->] (s1) ..controls (145.8bp,64.803bp) and
-    (132.68bp,51.685bp) .. (d4); \draw [->] (s4) ..controls
-    (124.2bp,64.803bp) and (137.32bp,51.685bp) .. (d1);
-    \draw [->] (s2) ..controls (243.0bp,64.131bp) and
-    (243.0bp,54.974bp) .. (d2); \draw [->] (s3) ..controls
-    (52.197bp,64.803bp) and (65.315bp,51.685bp) .. (d4);
-    \draw [->] (s4) ..controls (145.22bp,66.889bp) and
-    (184.76bp,47.119bp) .. (d2); \draw [->] (s2) ..controls
-    (180.05bp,69.018bp) and (104.76bp,43.919bp) .. (d3);
-    \draw [->] (s4) ..controls (73.803bp,64.803bp) and
-    (60.685bp,51.685bp) .. (d3); \draw [->] (s3) ..controls
-    (27.0bp,64.131bp) and (27.0bp,54.974bp) .. (d3); \draw
-          [->] (s3) ..controls (73.222bp,66.889bp) and
-          (112.76bp,47.119bp) .. (d1); \draw [->] (s2)
-          ..controls (217.8bp,64.803bp) and
-          (204.68bp,51.685bp) .. (d1); \draw [->] (s1)
-          ..controls (124.78bp,66.889bp) and
-          (85.238bp,47.119bp) .. (d3); \draw [->] (s1)
-          ..controls (196.2bp,64.803bp) and
-          (209.32bp,51.685bp) .. (d2); \draw [->] (s4)
-          ..controls (99.0bp,64.131bp) and (99.0bp,54.974bp)
-          .. (d4);
-  \end{tikzpicture}
-  \caption[]{Our feedforward neural network}
-  \label{fig:neural-network}
-\end{figure}
-
 The most commonly used way to program the computational graph is by
-using a Python API. A perhaps interesting example of the kind of
+using the Python API. A perhaps interesting example of the kind of
 computation one can express in TensorFlow using Python would the
-implementation of a neural network. Figure \ref{fig:neural-network}
-graphically represents the network we're going to implement: a simple
-feedforward
-network\footnote{https://en.wikipedia.org/wiki/Feedforward\_neural\_network}
-of four input neurons and four output neurons. As explained in Chapter
-\ref{ch:background} what a feedforward neural network does is a linear
-operation on its input and the application of an \emph{activation
-  function} on that result. That is, it computes
+implementation of a neural network. Figure
+\ref{fig:wikipedia-neural-network} graphically represents the
+network we're going to implement: a simple feedforward network of four
+input neurons and four output neurons. As explained in Chapter
+\ref{ch:background} what a feedforward neural network does is two fold:
+a linear operation on its input and the application of an activation
+function on that result. That is, it computes
 
 \[ \text{activation}(X * W + b) \]
 
 given its weight matrix and its bias vector, \( W \in \mathbb{R}^{4
   \times 4} \) and \( b \in \mathbb{R}^{4}\) respectively, while
 \( \text{activation} \) is a \emph{non}-linear function such as
-ReLU\footnote{https://en.wikipedia.org/wiki/Rectifier\_(neural\_networks)
-}.
+ReLU or softmax.
 
 \begin{figure}
   \begin{minted}{python}
@@ -166,14 +119,13 @@ ReLU\footnote{https://en.wikipedia.org/wiki/Rectifier\_(neural\_networks)
 
 To get an idea of how to do that in TensorFlow see Figure
 \ref{fig:tensorflow-feedforward}. Note that TensorFlow already
-implements the activation function \texttt{tf.nn.softmax}. That
-function is applied to the result of the matrix multiplication. As
-explained in Chapter \ref{ch:background} this is done for various
-reasons: it introduces a \emph{non-linear factor} in the network
-computations allowing it to learn how to compute a larger set of
-functions\footnote{https://en.wikipedia.org/wiki/Universal\_approximation\_theorem};
-also it squashes the output of the network in $[0,1]$ allowing to
-interpret it in terms of \emph{confidence levels}.
+implements the activation function \texttt{tf.nn.softmax}. In Figure
+\ref{fig:tensorflow-feedforward} that function is applied to the
+\emph{logit}\footnote{https://datascience.stackexchange.com/a/31045/50780},
+i.e. the output of the matrix multiplication. As explained in Chapter
+\ref{ch:background} this is done for various reasons but one of the
+simplest ones is that it squashes the output of the network in $[0,1]$
+allowing to interpret it in terms of confidence levels.
 
 \begin{figure}
   \begin{minted}{python}
@@ -212,7 +164,8 @@ interpret it in terms of \emph{confidence levels}.
   \begin{minted}{python}
     >>> W = tf.Variable(W)
     >>> b = tf.Variable(b)
-    >>> logits = tf.matmul(X, W) + b # redefine logits using variables 
+    >>> logits = tf.matmul(X, W) + b
+    >>> # redefine logits using variables 
     >>> probabilities = tf.nn.softmax(logits)
   \end{minted}
   \caption{Making variables out of \texttt{W} and \texttt{b}}
@@ -225,25 +178,28 @@ graph, allowing you to run the computational graph with your own data
 and get actual tensors of actual numbers out of it. Of course building
 neural networks is pretty useless if you can't train them: at first the
 whole output is only based on the random weights and biases randomly
-extracted from a uniform distribution --- for example, probabilities in
-Figure \ref{fig:use-session} are totally non-sense. There's no training
-set and no training phase yet. To train a network in TensorFlow we need
-a \texttt{tf.Variable}. A variable in TensorFlow is a tensor whose
-value persists across sessions and that session can modify. This allows
-you to basically add parameters to your computational graphs, allowing
-to iteratively change the function computed on the graph. That,
-combined with a learning procedure that modifies the
-\texttt{tf.Variable}s to reduce the distance from the target function
-to the actual function computed by the network, make the model
-\emph{learning}. In the current example, the part of the graph that you
-want the learning procedure to modify are $W$ and $b$. As in Figure
-\ref{fig:making-variables} to build a \texttt{tf.Variable} in
-TensorFlow you can just wrap an existing tensor.
+extracted from a normal distribution --- for example, probabilities in
+Figure \ref{fig:use-session} are totally non-sense: there's no training
+set and no training phase yet.
+
+To train a network in TensorFlow we need a \texttt{tf.Variable}. A
+variable in TensorFlow is a tensor whose value persists across sessions
+and that sessions have the power to modify. This allows you to
+basically add parameters to your computational graphs, allowing to
+iteratively \emph{change} it. Using a learning procedure that modifies
+the \texttt{tf.Variable}s to reduce the distance from the target
+function to the actual function computed by the network, makes the
+model \emph{learning}. In the current example, the part of the graph
+that you want the learning procedure to modify are the tensors $W$ and
+$b$. As in Figure \ref{fig:making-variables} to build a
+\texttt{tf.Variable} in TensorFlow you can just wrap those
+tensors.
 
 \begin{figure}
   \begin{minted}{python}
+    >>> from tf.nn import tf_cross_entropy
     >>> y_true = tf.placeholder(shape=(None,), dtype=tf.float32)
-    >>> cross_entropy = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=y_true)
+    >>> cross_entropy = tf_cross_entropy(logits=logits, labels=y_true)
   \end{minted}
   \caption{Creating the cross-entropy operation}
   \label{fig:cross-entropy}
@@ -255,39 +211,39 @@ TensorFlow you can just wrap an existing tensor.
     optimizer = SGD(learning_rate=0.5).minimize(cross_entropy)
 
     with tf.Session() as session:
-        session.run(tf.global_variables_initializer()) # needed.
+        session.run(tf.global_variables_initializer())
 
     n_training_steps = 10
     for i in range(n_training_steps):
         images, classes = next_batch()
 
         with tf.Session() as session:
-            session.run(optimizer, feed_dict={X: images, y_true: classes})
+            session.run(optimizer, feed_dict={X: images,
+                                              y_true: classes})
   \end{minted}
   \caption{Training a feedforward neural network built with TensorFlow}
   \label{fig:training-network}
 \end{figure}
 
 The last thing we want to do before abandoning this example is the
-actual training of the network. To perform training we need a training
-set. As explained in Chapter \ref{ch:background}, a training set
-consist of a batch of data and a label associated to each input,
-representing the class of that data. As \emph{training} basically means
-minimizing a loss function between the provided labels of the training
-set and the labels guessed by the neural network, we need a loss
-function: as in Figure \ref{fig:cross-entropy}, we're using
-\texttt{tf.nn.softmax\_cross\_entropy\_with\_logits\_v2}\footnote{https://en.wikipedia.org/wiki/Cross\_entropy\#Cross-entropy\_error\_function\_and\_logistic\_regression}.
-The gradient descent
-algorithm\footnote{https://en.wikipedia.org/wiki/Gradient\_descent} is
-then used to iteratively minimize the cross-entropy computed against
-the network output. TensorFlow implements that algorithm via
-\texttt{GradientDescentOptimizer.minimize(loss)} that returns an operation
-that each time you run in a session will modify the graph's
-\texttt{tf.Variable}s, in the quest of lowering the value of the loss
-function. We can build a loop to train the network over and over, as in
-Figure \ref{fig:training-network}. This will push the loss function
-toward a local minimum; hopefully a useful one, i.e. a minimum that
-corresponds to good results even on data outside the training set.
+actual training. To perform training we need a training set. As
+explained in Chapter \ref{ch:background}, a training set consist of a
+bunch of data and a label associated to each input, representing the
+class of that data. As \emph{training} basically means minimizing a
+loss function we need that function: as in Figure
+\ref{fig:cross-entropy}, we're using
+cross-entropy\footnote{https://en.wikipedia.org/wiki/Cross\_entropy\#Cross-entropy\_error\_function\_and\_logistic\_regression}.
+
+The gradient descent algorithm is then used to iteratively do the job.
+TensorFlow implements the procedure via
+\texttt{GradientDescentOptimizer.minimize(loss)} that returns an
+operation that each time you run in a session will modify the graph's
+\texttt{tf.Variable}s, aiming to lower the value of the cross-entropy
+\emph{loss} function. We can build a loop to train the network over and
+over again, as in Figure \ref{fig:training-network}. This will push the
+loss function toward a local minimum; hopefully a useful one, i.e. a
+minimum that corresponds to good results even on data outside the
+training set\footnote{https://en.wikipedia.org/wiki/Overfitting}.
 
 \section{Keras}
 \label{sec:keras}
@@ -334,15 +290,18 @@ manipulates it --- see Figure \ref{fig:toy-layer}.
 \end{figure}
 
 As shown in Figure \ref{fig:feedforward-with-layers}, to implement the
-simple feedforward neural network described in \ref{sec:tensorflow} one
-would stack a \texttt{Dense} layer of 4 hidden neurons and an
-\texttt{Activation} layer implementing the softmax function. Compare
-that to the TensorFlow implementation and you'll see it's much more
-easier to read and to think about. This nicer API that allows
-to immediately think about model's architecture is paid an abstraction
-level that at the time of this writing in my opinion is not enough
-stable to allow programmers to be completely oblivious of the original
-backend --- in my case TensorFlow.
+simple feedforward neural network of Figure
+\ref{fig:wikipedia-neural-network} one would stack a \texttt{Dense}
+layer of 4 hidden neurons and an \texttt{Activation} layer implementing
+the softmax function. Compare that to the TensorFlow implementation we
+did in Section \ref{sec:tensorflow} and you'll realize how much easier
+is to read it and to think about it.
+
+This nicer API that allows to immediately think about model's
+architecture has the cost of an abstraction level that at the time of
+this writing in our opinion is not enough stable to allow programmers
+to be completely oblivious of the original backend --- in my case
+TensorFlow.
 
 \section{CleverHans}
 \label{sec:cleverhans}
@@ -351,10 +310,11 @@ CleverHans\footnote{https://www.cleverhans.io/} is a library for
 building adversarial examples written by Google, OpenAI and
 Pennsylvania State University. It implements a variety of
 attacks\footnote{https://cleverhans.readthedocs.io/en/latest/source/attacks.html}
+including fast gradient sign (see Chapter \ref{ch:background})
 against neural networks and it's compatible with models built with
-Keras or just plain TensorFlow. It uses the same computational graphs
-of TensorFlow to generate adversarial examples, so again using the
-library knowing something about computational graphs helps.
+Keras or just plain TensorFlow. It leverages the computational graphs
+of TensorFlow to generate adversarial examples, so using the
+library without knowing TensorFlow is not easy.
 
 \begin{figure}
   \begin{minted}[linenos]{python}
@@ -376,9 +336,8 @@ library knowing something about computational graphs helps.
 To generate adversarial examples for a given model CleverHans needs to
 be able to read some internals of the model --- inputs are generated in
 a white-box approach. CleverHans already provides a couple of utilities
-to do that \emph{model inspection} for some commonly used libraries ---
-e.g. for Keras there's a
-\texttt{KerasModelWrapper}\footnote{https://github.com/tensorflow/cleverhans/blob/66125be4e0e98686c5e005677263e52d3f3cea47/cleverhans/utils\_keras.py\#L101}
+to do that \emph{model inspection} --- e.g. for Keras there's a
+\texttt{KerasModelWrapper}\footnote{https://github.com/tensorflow/cleverhans/blob/66125be/cleverhans/utils\_keras.py\#L101}
 --- transforming the model into an object that CleverHans is able to
 handle. Once a model has the interface CleverHans expects, it's
 possible to choose the attack technique via classes inhereting from the
@@ -398,12 +357,11 @@ uses a simple and consistent API, with the ability to handle numpy
 arrays or even Python lists --- instead of having to learn about the
 computational graph.
 
-I've used scikit-learn to reuse a couple of decomposition
+We've used scikit-learn to reuse a couple of decomposition
 algorithms\footnote{http://scikit-learn.org/0.20/modules/classes.html\#module-sklearn.decomposition}
 without having to implement them. This required a bit of thinking as
 while Keras and TensorFlow use a lot the computational graph,
-scikit-learn is completely oblivious of that structure. Making use of
-all the three libraries together required a bit of thinking.
+scikit-learn is completely oblivious of that structure.
 
 \begin{figure}
   \begin{minted}[linenos]{python}
@@ -428,13 +386,29 @@ Figure \ref{fig:transform-inverse_transform}.
 \section{Google Cloud Platform}
 \label{sec:google-cloud-platform}
 
+\begin{figure}
+  \centering
+  \begin{tabular}{|c|c|}
+    \hline
+    CPU platform & Intel Haswell \\
+    \hline
+    memory & 60 GB \\
+    \hline
+    vCPUs & 16 \\
+    \hline
+    GPU & 1 x NVIDIA Tesla P100 \\
+    \hline
+  \end{tabular}
+  \caption{Information of the machine used via GCP.}
+  \label{fig:expensive-machine}
+\end{figure}
+
 Google Cloud Platform is a set of services that allows people to buy
-computational power from Google. In our case, we used Google Cloud
-Platform to get access to a GPU for few dollars a
+computational power from Google. In our case, we used GCP to get access
+to a GPU for few dollars a
 month\footnote{https://cloud.google.com/blog/products/gcp/introducing-improved-pricing-for-preemptible-gpus}.
-Since we had \$300 of free credit we chose an expensive machine type
-``n1-standard-16 (16 vCPUs, 60 GB memory)'', CPU platform ``Intel%
-Haswell'' and as for GPUs ``1 x NVIDIA Tesla P100''. That made running
+Since we had \$300 of free credit we chose an expensive machine type as
+described in Figure \ref{fig:expensive-machine}. That made running
 experiments a lot faster in many cases.
 
 \begin{figure}
