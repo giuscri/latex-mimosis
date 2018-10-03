@@ -104,6 +104,8 @@
 \usepackage{amsfonts}
 \usepackage[bottom,flushmargin]{footmisc}
 
+\renewcommand{\baselinestretch}{1.2}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Incipit
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -120,10 +122,11 @@
 
 \mainmatter
 
+  \include{Sources/Introduction}
   \include{Sources/Background}
   \include{Sources/ToolsAndLibraries}
   \include{Sources/RobustNetworks}
-  %\include{Sources/Conclusions}
+  \include{Sources/Conclusion}
 
 % This ensures that the subsequent sections are being included as root
 % items in the bookmark structure of your PDF reader.

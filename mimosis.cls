@@ -4,7 +4,7 @@
 \LoadClass[paper=a4,
            twoside,
            pagesize,
-           15pt,
+           12pt,
            DIV=10,                % TODO: Make configurable
            BCOR=10mm,             % TODO: Make configurable
            cleardoublepage=empty,
