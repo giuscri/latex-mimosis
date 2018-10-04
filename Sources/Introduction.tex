@@ -1,1 +1,29 @@
 \chapter*{Introduction}
+
+This work is about how neural networks can be improved from a
+resiliency standpoint, against malicious inputs. Many researchers are
+doing serious work (cite papers here) both by finding novel forms of
+defenses but also by crafting new kind of inputs that defeat the
+state-of-the-art defenses. This thesis tries to do a small step in the
+former direction, by trying to measure the performance of a defense
+technique.
+
+The work that we're using as a starting point is based on is
+\cite{bhagoji2018enhancing}. In that paper, researchers use a technique
+called Principal Component Analysis to derive a filter for images. It
+turns out that applying that filter on each image before the
+classification reduces the rate of success for an attacker that
+provides input specifically forged to make the model misclassify it. We
+reproduced those results and swapped Principal Components Analysis with
+other similar dimensionality reductions techniques. The idea is that as
+there's nothing intrinsically special about Principal Components
+Analysis hence maybe other filters are better suited for the task.
+
+The work is organized as follows: in Chapter \ref{ch:background} we
+provide some background material about Machine Learning in general,
+Neural Networks and Adversarial Examples. Chapter
+\ref{ch:tools-and-libraries} is about the technological part of this
+work --- the tools that we used to perform our experiments. Finally,
+Chapter \ref{ch:implementation-of-robust-networks} is about the actual
+experiments and measurements, comparing the performance of a Principal
+Components Analysis filter to the other filters.

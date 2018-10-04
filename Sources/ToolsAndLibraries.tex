@@ -12,7 +12,7 @@ graph; Section \ref{sec:keras} is for Keras, a high-level API for
 TensorFlow; Section \ref{sec:cleverhans} describes CleverHans, a
 library to generate adversarial examples; Section \ref{sec:sklearn}
 talks about Scikit-learn, a library for building and training Machine
-Learning models while Section \ref{sec:google-cloud-platform} briefly
+Learning models, while Section \ref{sec:google-cloud-platform} briefly
 mentions Google Cloud Platform, a service by Google that allows you to
 buy computational power to run your own code.
 
@@ -31,26 +31,26 @@ buy computational power to run your own code.
 \end{figure}
 
 TensorFlow is a C++ framework for Machine Learning released by Google.
-It uses a peculiar programming model called Data Flow. While that
-allows parallel and distributed computation, it can be quite daunting
-to use when tinkering. In fact, operations to perform on data are first
-described and only later executed. We believe this can be
-counter-intuitive for most people. For example, in Figure
-\ref{fig:fortytwo} \texttt{symbol} doesn't contain a reference to the
-integer 42 --- as opposed to what would have been if \texttt{symbol} was
-an \texttt{int} variable. Instead it contains a reference to a node of
-the \emph{computational graph} (a description of the computation to
-perform on data in terms of nodes and edges) which will always output
-42. In TensorFlow computation is done by connecting one or more of
-these nodes to other nodes, letting \emph{tensors} (``the main object
-you manipulate and pass around [in TensorFlow]''%
-\footnote{https://www.tensorflow.org/guide/tensors})
-move around this graph (in case of Figure \ref{fig:fortytwo}, the
-tensor is the output of the only one node in the graph: the tensor is
-42). Problem is that in general until you don't run the computational
-graph it's hard to determine what's going to be the value of a tensor,
-that is the \emph{output} of the computational graph. This is slowing
-down exploratory analysis.
+It uses a peculiar programming model called Data Flow that allows
+parallel and distributed computations, although it can be quite
+daunting to use when tinkering. In fact, operations to perform on data
+are first described and executed only at a later time. We believe this
+can be counter-intuitive for most people. For example, during the
+execution of the code shown in Figure \ref{fig:fortytwo}, the variable
+\texttt{symbol} doesn't contain a reference to the integer 42 --- as
+opposed to what would have been if \texttt{symbol} was an \texttt{int}
+variable. Instead, it contains a reference to a node of a
+\emph{computational graph} (a description of the computation to perform
+on data in terms of nodes and edges) which will always output 42. In
+TensorFlow, computation is done by connecting one or more of these nodes
+to other nodes, letting \emph{tensors} (the object that you manipulate
+in TensorFlow) \emph{flow} around this
+graph (in case of Figure \ref{fig:fortytwo}, the tensor is the output
+of the only one node in the graph: the tensor is 42). Problem is that,
+in general, it's hard to
+determine beforehand what is going to be the value of a tensor, that is the
+\emph{output} of the computational graph. This is slowing down
+exploratory analysis.
 
 \begin{figure}
   \centering
@@ -66,41 +66,73 @@ down exploratory analysis.
   \label{fig:easy-graph}
 \end{figure}
 
-By the way TensorFlow's computational graphs are a fundamental part of the
-framework. A computational graph is a directed graph representing a
-computation involving tensors. A tensor in TensorFlow is any
+By the way, TensorFlow's computational graphs are a fundamental part of
+the framework. A computational graph is a directed graph representing a
+computation involving tensors. A tensor in TensorFlow is a generalized
 multi-dimensional array: it can be a scalar, a matrix, a batch of RGB
-images (which is a 4D vector\footnote{If you always thought humans can't
-  visualize four dimensions all at once, think of this example.}), etc. Each node
-represents an operation on tensors, while edges represent
-tensors.\footnote{This distinction between nodes and edges is important
-  more from a formal standpoint than a practical one: actually thinking
-  of tensors as nodes makes no difference to the best of my knowledge.}
+images (which is a 4D vector\footnote{If you always thought humans
+  can't visualize four dimensions all at once, think of this
+  example.}), etc. Each node represents an operation on tensors, while
+edges represent tensors.
 
 For example, Figure \ref{fig:easy-graph} shows a very simple
 computational graph. It's the one associated to an addition of two
-\texttt{tf.float32}'s (i.e. two tensors made of 32-bit float numbers):
-the first two nodes \texttt{a} and \texttt{b} output one tensor each;
-those are used to feed the \texttt{add} node that will output the
-tensor resulting from the sum of \texttt{a} and \texttt{b}.
+\emph{numerical} tensors (two tensors made of numbers: two
+\texttt{tf.float32}, two \texttt{tf.int64}, etc.): the first two nodes
+\texttt{a} and \texttt{b} output one tensor each; those are used to
+feed the \texttt{add} node that will output the tensor resulting from
+the sum of \texttt{a} and \texttt{b}.
+
+\begin{figure}
+  \centering
+  \begin{tikzpicture}[>=latex,line join=bevel,]
+    \node (s3) at (27.0bp,90.0bp) [draw,ellipse] {};
+    \node (s2) at (243.0bp,90.0bp) [draw,ellipse] {};
+    \node (s1) at (171.0bp,90.0bp) [draw,ellipse] {};
+    \node (s4) at (99.0bp,90.0bp) [draw,ellipse] {};
+    \node (d4) at (99.0bp,18.0bp) [draw,ellipse] {};
+    \node (d2) at (243.0bp,18.0bp) [draw,ellipse] {};
+    \node (d3) at (27.0bp,18.0bp) [draw,ellipse] {};
+    \node (d1) at (171.0bp,18.0bp) [draw,ellipse] {};
+    \draw [->] (s1) ..controls (171.0bp,64.131bp) and (171.0bp,54.974bp)  .. (d1);
+    \draw [->] (s2) ..controls (196.78bp,66.889bp) and (157.24bp,47.119bp)  .. (d4);
+    \draw [->] (s3) ..controls (89.947bp,69.018bp) and (165.24bp,43.919bp)  .. (d2);
+    \draw [->] (s1) ..controls (145.8bp,64.803bp) and (132.68bp,51.685bp)  .. (d4);
+    \draw [->] (s4) ..controls (124.2bp,64.803bp) and (137.32bp,51.685bp)  .. (d1);
+    \draw [->] (s2) ..controls (243.0bp,64.131bp) and (243.0bp,54.974bp)  .. (d2);
+    \draw [->] (s3) ..controls (52.197bp,64.803bp) and (65.315bp,51.685bp)  .. (d4);
+    \draw [->] (s4) ..controls (145.22bp,66.889bp) and (184.76bp,47.119bp)  .. (d2);
+    \draw [->] (s2) ..controls (180.05bp,69.018bp) and (104.76bp,43.919bp)  .. (d3);
+    \draw [->] (s4) ..controls (73.803bp,64.803bp) and (60.685bp,51.685bp)  .. (d3);
+    \draw [->] (s3) ..controls (27.0bp,64.131bp) and (27.0bp,54.974bp)  .. (d3);
+    \draw [->] (s3) ..controls (73.222bp,66.889bp) and (112.76bp,47.119bp)  .. (d1);
+    \draw [->] (s2) ..controls (217.8bp,64.803bp) and (204.68bp,51.685bp)  .. (d1);
+    \draw [->] (s1) ..controls (124.78bp,66.889bp) and (85.238bp,47.119bp)  .. (d3);
+    \draw [->] (s1) ..controls (196.2bp,64.803bp) and (209.32bp,51.685bp)  .. (d2);
+    \draw [->] (s4) ..controls (99.0bp,64.131bp) and (99.0bp,54.974bp)  .. (d4);
+  \end{tikzpicture}
+  \caption[neural-network]{Feedforward neural network with only input
+    and output layer}
+  \label{fig:neural-network}
+\end{figure}
 
 The most commonly used way to program the computational graph is by
-using the Python API. A perhaps interesting example of the kind of
-computation one can express in TensorFlow using Python would the
-implementation of a neural network. Figure
-\ref{fig:wikipedia-neural-network} graphically represents the
-network we're going to implement: a simple feedforward network of four
-input neurons and four output neurons. As explained in Chapter
-\ref{ch:background} what a feedforward neural network does is two fold:
-a linear operation on its input and the application of an activation
-function on that result. That is, it computes
+using an API for the Python language. A perhaps interesting example of
+the kind of computation one can express in TensorFlow using Python
+would the implementation of a neural network. Figure
+\ref{fig:neural-network} graphically represents the network
+we're going to implement: a simple feedforward network of four input
+neurons and four output neurons. As explained in Chapter
+\ref{ch:background}, each layer in a feedforward neural network performs
+a linear operation on its input and apply an activation function on
+that result. That is, it computes
 
 \[ \text{activation}(X * W + b) \]
 
 given its weight matrix and its bias vector, \( W \in \mathbb{R}^{4
   \times 4} \) and \( b \in \mathbb{R}^{4}\) respectively, while
 \( \text{activation} \) is a \emph{non}-linear function such as
-ReLU or softmax.
+the rectifier or the softmax function.
 
 \begin{figure}
   \begin{minted}{python}
@@ -118,14 +150,17 @@ ReLU or softmax.
 \end{figure}
 
 To get an idea of how to do that in TensorFlow see Figure
-\ref{fig:tensorflow-feedforward}. Note that TensorFlow already
-implements the activation function \texttt{tf.nn.softmax}. In Figure
-\ref{fig:tensorflow-feedforward} that function is applied to the
+\ref{fig:tensorflow-feedforward}, where $W$ and $b$ are initialized
+drawing values from a standard normal distribution. Note that
+\texttt{X} is a \emph{placeholder}: it is a TensorFlow way to make room
+in the graph for something whose value will be provided later. In
+Figure \ref{fig:tensorflow-feedforward} that function is applied to the
 \emph{logit}\footnote{https://datascience.stackexchange.com/a/31045/50780},
 i.e. the output of the matrix multiplication. As explained in Chapter
 \ref{ch:background} this is done for various reasons but one of the
 simplest ones is that it squashes the output of the network in $[0,1]$
-allowing to interpret it in terms of confidence levels.
+allowing to interpret it in terms of confidence levels --- see Chapter
+\ref{ch:background}.
 
 \begin{figure}
   \begin{minted}{python}
@@ -173,7 +208,7 @@ allowing to interpret it in terms of confidence levels.
 \end{figure}
 
 Now, to get results out of the graph you need what's called a
-\emph{session} in TensorFlow. Basically a session \emph{powers on} the
+\emph{session} in TensorFlow. Basically, a session \emph{powers on} the
 graph, allowing you to run the computational graph with your own data
 and get actual tensors of actual numbers out of it. Of course building
 neural networks is pretty useless if you can't train them: at first the
@@ -183,17 +218,16 @@ Figure \ref{fig:use-session} are totally non-sense: there's no training
 set and no training phase yet.
 
 To train a network in TensorFlow we need a \texttt{tf.Variable}. A
-variable in TensorFlow is a tensor whose value persists across sessions
-and that sessions have the power to modify. This allows you to
-basically add parameters to your computational graphs, allowing to
-iteratively \emph{change} it. Using a learning procedure that modifies
-the \texttt{tf.Variable}s to reduce the distance from the target
-function to the actual function computed by the network, makes the
-model \emph{learning}. In the current example, the part of the graph
-that you want the learning procedure to modify are the tensors $W$ and
-$b$. As in Figure \ref{fig:making-variables} to build a
-\texttt{tf.Variable} in TensorFlow you can just wrap those
-tensors.
+variable in TensorFlow is a tensor which can be modified by sessions,
+whose value persists across them. This allows you to basically add
+parameters to your computational graphs, allowing to iteratively
+\emph{change} them. Using a learning procedure that modifies the
+\texttt{tf.Variable}s to reduce the distance from the target function
+to the actual function computed by the network, makes the model
+\emph{learning}. In the current example, the part of the graph that you
+want the learning procedure to modify are the tensors $W$ and $b$. As
+in Figure \ref{fig:making-variables} to build a \texttt{tf.Variable} in
+TensorFlow you can just wrap those tensors.
 
 \begin{figure}
   \begin{minted}{python}
@@ -227,12 +261,31 @@ tensors.
 
 The last thing we want to do before abandoning this example is the
 actual training. To perform training we need a training set. As
-explained in Chapter \ref{ch:background}, a training set consist of a
+explained in Chapter \ref{ch:background}, a training set consists of a
 bunch of data and a label associated to each input, representing the
 class of that data. As \emph{training} basically means minimizing a
-loss function we need that function: as in Figure
-\ref{fig:cross-entropy}, we're using
-cross-entropy\footnote{https://en.wikipedia.org/wiki/Cross\_entropy\#Cross-entropy\_error\_function\_and\_logistic\_regression}.
+loss function, we need that function: as in Figure
+\ref{fig:cross-entropy}, we're using the cross-entropy function.
+Cross-entropy is defined as
+
+\[ H(p, q) = - \sum_i {p_i \, \log{q_i}} \]
+
+where $p$ and $q$ are two probability distributions. In our case, $p$
+is the \emph{probability} distribution for an input (the classifier's
+confidence levels, the output of a neural network if the model is a
+neural network), and $q$ is the one-hot encoding of the actual class of
+the input (which looks and it's in fact used here as a probability
+distribution).
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\linewidth]{wikipedia-overfitting.png}
+  \caption{Green curve represents an overfitting classifier. By
+    Chabacano [CC BY-SA 4.0
+      (https://creativecommons.org/licenses/by-sa/4.0)], from Wikimedia
+    Commons}
+  \label{fig:wikipedia-overfitting}
+\end{figure}
 
 The gradient descent algorithm is then used to iteratively do the job.
 TensorFlow implements the procedure via
@@ -243,7 +296,17 @@ operation that each time you run in a session will modify the graph's
 over again, as in Figure \ref{fig:training-network}. This will push the
 loss function toward a local minimum; hopefully a useful one, i.e. a
 minimum that corresponds to good results even on data outside the
-training set\footnote{https://en.wikipedia.org/wiki/Overfitting}.
+training set. Otherwise the model is said to \emph{overfit}. That is,
+the model \emph{fit} so well over the training set that fail generalize
+to the whole input space. For example, in Figure
+\ref{fig:wikipedia-overfitting} we have plotted two classifiers: one
+drawn as a green curve, the other as a black curve. The \emph{green}
+model has a better accuracy (that is, it has a high rate of correct
+classifications) on the training set, but its characteristics are
+clearly so much dependent on the set the models has been trained that
+it will almost surely fail to keep that high accuracy on data outside
+the training set --- while the \emph{black} model has a higher
+probability to be a good model.
 
 \section{Keras}
 \label{sec:keras}
