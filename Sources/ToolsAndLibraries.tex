@@ -466,6 +466,75 @@ graph; when you run it in a session it will return the related
 adversarial example. See Figure
 \ref{fig:cleverhans-attack-dot-generate} for a short example.
 
+In our codebase used to run experiments, we wrapped CleverHans
+interface for the \texttt{FastGradientMethod} in a simpler method
+called \texttt{adversarial\_example}, that takes the model, the
+original input and a value for $\eta$ --- that is, the only needed
+informations in our case.
+
+As CleverHans generates a computational graph each time you call the
+\texttt{generate} method, that would result in generating new
+computational graphs for each time you needed an adversarial example.
+We tried that for a while, but soon we discovered that performance
+degraded over time up to the point of triggering some memory errors. In
+fact, the computational graph is never gargabe collected: it's an
+append only structure.
+
+\begin{figure}
+  \begin{minted}[linenos]{python}
+@lru_cache()
+def __fast_gradient_sign_tf_symbols(model, serializedX, serializedy_target):
+  X = loads(serializedX)
+  y_target = loads(serializedy_target)
+
+  cleverhans_model = KerasModelWrapper(model)
+  attack = FastGradientMethod(cleverhans_model)
+
+  X_sym = tf.placeholder(tf.float32, shape=model.input.shape)
+  eta_sym = tf.placeholder(tf.float32)
+  if y_target is not None:
+    one_hot_y_target_sym = tf.placeholder(tf.float32, shape=model.output.shape)
+  else:
+    one_hot_y_target_sym = None
+
+  kwargs = {"eps": eta_sym, "ord": np.inf, "clip_min": 0., "clip_max": 1.}
+  if y_target is not None:
+    kwargs["y_target"] = one_hot_y_target_sym
+
+  example_sym = attack.generate(X_sym, **kwargs)
+  return X_sym, one_hot_y_target_sym, example_sym, eta_sym
+
+
+def adversarial_example(model, X, y_target=None, eta=0.15):
+  assert y_target is None or len(y_target) == len(X)
+  with_target = y_target is not None
+
+  if with_target:
+    num_classes = model.output.shape.as_list()[-1]
+    one_hot_y_target = to_categorical(y_target, num_classes=num_classes)
+
+  serializedX = dumps(X)
+  serializedy_target = dumps(y_target)
+  symbols = __fast_gradient_sign_tf_symbols(model, serializedX, serializedy_target)
+  X_sym, one_hot_y_target_sym, example_sym, eta_sym = symbols
+  session = K.get_session()
+  feed_dict = {X_sym: X, eta_sym: eta}
+  if with_target:
+    feed_dict[one_hot_y_target_sym] = one_hot_y_target
+
+  return session.run(example_sym, feed_dict=feed_dict)
+  \end{minted}
+  \caption{Generating examples without polluting too much the computational graph}
+  \label{fig:lru-cache}
+\end{figure}
+
+We solved this problem by reducing the appends to the computational
+graph, returning instead nodes from the computationa graph that could
+be reused. To do that, we did split the logic of the function in two
+parts: one part to fetch cached nodes, or to create new ones; the other
+to use those symbols. Then we decorated the first function with
+\texttt{@lru\_cache} --- see Figure \ref{fig:lru-cache}.
+
 \section{Scikit-learn}
 \label{sec:sklearn}
 
@@ -477,13 +546,40 @@ uses a simple and consistent API, with the ability to handle numpy
 arrays or even Python lists --- instead of having to learn about
 computational graphs.
 
+\begin{figure}
+  \begin{minted}[linenos]{python}
+def filtered_model(model, X_train, sklearn_transformer=None):
+  element_shape = X_train.shape[1:]
+  pxs_per_element = np.prod(element_shape)
+
+  def preprocessing_fn(X, sklearn_transformer):
+    flatX = X.reshape(-1, pxs_per_element)
+    filtered_flatX = sklearn_transformer.inverse_transform(
+      sklearn_transformer.transform(flatX))
+    return filtered_flatX.reshape(-1, *element_shape)
+
+  filtered_model = clone_model(model)
+
+  ...
+
+  filtered_model.preprocessing_fn = partial(preprocessing_fn,
+    sklearn_transformer=sklearn_transformer)
+
+  ...
+
+  return filtered_model
+  \end{minted}
+  \caption{Reusing sklearn transformers to generated \emph{filtered} models}
+  \label{fig:sklearn-code}
+\end{figure}
+
 We have used scikit-learn to reuse a couple of decomposition algorithms
-without having to implement them. These algorithms are used to derive
-the image filters described in Chapter
-\ref{ch:implementation-of-robust-networks} and partially described in
-\ref{ch:background}. This required a bit of thinking, as while Keras
-and TensorFlow use a lot the computational graph, scikit-learn is
-completely oblivious of that structure.
+without having to implement them (see Figure \ref{fig:sklearn-code}).
+These algorithms are used to derive the image filters described in
+Chapter \ref{ch:implementation-of-robust-networks} and partially
+described in \ref{ch:background}. This required a bit of thinking, as
+while Keras and TensorFlow use a lot the computational graph,
+scikit-learn is completely oblivious of that structure.
 
 \begin{figure}
   \begin{minted}[linenos]{python}
