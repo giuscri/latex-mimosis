@@ -80,8 +80,8 @@ baseline.
 
 Both heuristics have been implemented in terms of Keras
 \texttt{Callback}s. A callback in Keras is an object exposing a
-\texttt{on_epoch_end} function that's called after each epoch. By
-setting the value of the boolean \texttt{self.model.stop_training}, the
+\texttt{on\_epoch\_end} function that's called after each epoch. By
+setting the value of the boolean \texttt{self.model.stop\_training}, the
 callback can stop training \emph{before} the number of epochs the model
 was training for.
 
@@ -237,15 +237,15 @@ work better.
 \begin{figure}
   \centering
   \begin{subfigure}{0.3\linewidth}
-    \includegraphics[width=\linewidth]{filtered-input-pca-784-components.png}
+    \includegraphics[width=\linewidth]{Images/filtered-input-pca-784-components.png}
     \caption{784 components}
   \end{subfigure}
   \begin{subfigure}{0.3\linewidth}
-    \includegraphics[width=\linewidth]{filtered-input-pca-100-components.png}
+    \includegraphics[width=\linewidth]{Images/filtered-input-pca-100-components.png}
     \caption{100 components}
   \end{subfigure}
   \begin{subfigure}{0.3\linewidth}
-    \includegraphics[width=\linewidth]{filtered-input-pca-40-components.png}
+    \includegraphics[width=\linewidth]{Images/filtered-input-pca-40-components.png}
     \caption{40 components}
   \end{subfigure}
   \caption{Retaining a different number of components for a PCA filter.}
@@ -281,15 +281,15 @@ given the accuracy lost by the model is not \emph{too much}.
 \begin{figure}
   \centering
   \begin{subfigure}{0.3\linewidth}
-    \includegraphics[width=\linewidth]{adversarial-input-fc-100-100-10-005.png}
+    \includegraphics[width=\linewidth]{Images/adversarial-input-fc-100-100-10-005.png}
     \caption{$\eta = 0.05$}
   \end{subfigure}
   \begin{subfigure}{0.3\linewidth}
-    \includegraphics[width=\linewidth]{adversarial-input-fc-100-100-10-01.png}
+    \includegraphics[width=\linewidth]{Images/adversarial-input-fc-100-100-10-01.png}
     \caption{$\eta = 0.1$}
   \end{subfigure}
   \begin{subfigure}{0.3\linewidth}
-    \includegraphics[width=\linewidth]{adversarial-input-fc-100-100-10-025.png}
+    \includegraphics[width=\linewidth]{Images/adversarial-input-fc-100-100-10-025.png}
     \caption{$\eta = 0.25$}
   \end{subfigure}
   \caption{Adversarial examples as $\eta$ increases.}

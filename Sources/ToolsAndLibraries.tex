@@ -5,7 +5,7 @@
 
 In this chapter we describe the tools and libraries that we used to
 implement the set of experiments described in Chapter
-\ref{ch:robust-networks}. This chapter is organized as follows: Section
+\ref{ch:implementation-of-robust-networks}. This chapter is organized as follows: Section
 \ref{sec:tensorflow} is dedicated to
 TensorFlow\footnote{https://www.tensorflow.org/} and its computational
 graph; Section \ref{sec:keras} is for Keras, a high-level API for
@@ -332,7 +332,7 @@ distribution).
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.5\linewidth]{wikipedia-overfitting.png}
+  \includegraphics[width=0.5\linewidth]{Images/wikipedia-overfitting.png}
   \caption{Green curve represents an overfitting classifier. By
     Chabacano [CC BY-SA 4.0
       (https://creativecommons.org/licenses/by-sa/4.0)], from Wikimedia
@@ -480,7 +480,7 @@ computational graphs.
 We have used scikit-learn to reuse a couple of decomposition algorithms
 without having to implement them. These algorithms are used to derive
 the image filters described in Chapter
-\ref{ch:implementing-robust-networks} and partially described in
+\ref{ch:implementation-of-robust-networks} and partially described in
 \ref{ch:background}. This required a bit of thinking, as while Keras
 and TensorFlow use a lot the computational graph, scikit-learn is
 completely oblivious of that structure.

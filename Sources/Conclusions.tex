@@ -3,25 +3,42 @@
 \addcontentsline{toc}{chapter}{Conclusions}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-This work took more or less three months, basically a student's summer.
-This has been my first experience with Machine Learning so I had to
-spend some time learning about fundamentals of Machine Learning: what's
-the training set? A validation set? The learning rate of the gradient
-descent algorithm? Or simply what's a neural network?
+The thesis started by introducing some background knowledge on Machine
+Learning and the topic of adversarial examples. Then we described the
+tools we used at a high level. We finished with a chapter where the
+results of the experiments are finally discussed.
 
-The research that I proposed to my advisors was an attempt to merge the
-curiosity of what's a hot topic right now --- Machine Learning and
-neural networks --- with my passion of watching computers break. I find
-that the topic of adversarial examples can be as fascinating to
-security interested people just like a memory corruption can be. Tools
-and culture is a lot different from the traditional hacker one but I
-think that if Machine Learning will become more ubiquitous more
-security researchers will join the field\footnote{``Weaponizing Machine
-  Learning'', talk at DEF CON 25}.
+This work took more or less three months, basically a student's summer
+break. This has been my first experience with Machine Learning so I had
+to spend the required time learning about fundamentals and primitives
+of the field: what is the training set? the validation set? cross
+validation? what is the gradient descent and what is the learning rate?
+what is a neural network? what is backpropagation?
 
-As to me, this work was the shortcut to learn about Neural Networks. I
-had some book titles that I wanted to read by the summer but when
-presented the opportunity to learn about that same topic hands-on I
-couldn't resist. A lot of time has been used to glue different
-libraries together, reading documentations and trying to not depress
-when confronted with crazy long researchers' papers.
+This thesis was an attempt to combine a genuine curiosity about Machine
+Learning --- being it a hot topic right now --- with my passion of
+watching \emph{computers} to break. I find that the topic of
+adversarial examples can be as fascinating to security-oriented
+computer scientists just like memory corruption or other traditional
+computer security topics are \cite{DBLP:journals/corr/PapernotMSW16}.
+The culture and the medium to share knowledge are very different: on
+one hand, in the case of Machine Learning, you have mostly books and
+research papers; on the other hand, in the case of traditional
+security, you have RFCs, tweets from mysterious independent
+researchers, pastebins and blog posts. Yet some attempt has been done
+to make the two scenes communicate%
+\footnote{https://youtu.be/JAGDpJFFM2A, ``Machine Duping 101: Pwning
+  Deep Learning Systems''}
+\footnote{https://youtu.be/wbRx18VZlYA, ``Weaponizing Machine
+  Learning''}.
+
+As explained in Chapter \ref{ch:implementation-of-robust-networks} the
+result of this thesis is that it is hard to improve the performance of
+a model protected by a Principal Components Analysis filter just by
+swapping that dimensionality reduction technique with some other
+technique. That said, I'm rather satisfied as I did choose this work
+mostly to get some hands-on experience on Machine Learning. I
+previously struggled to find the courage to deep dive into such an
+unknown topic that I exploited this opportunity --- the Bachelor of
+Science thesis --- to study it, making it something required to know at
+least at a high level before graduation.
