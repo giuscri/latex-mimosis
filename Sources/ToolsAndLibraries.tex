@@ -267,7 +267,7 @@ and get actual tensors of actual numbers out of it. Of course building
 neural networks is pretty useless if you can't train them: at first the
 whole output is only based on the random weights and biases randomly
 extracted from a normal distribution --- for example, probabilities in
-Figure \ref{fig:use-session} are totally non-sense: there's no training
+Figure \ref{fig:use-session} are totally non-sense: there is no training
 set and no training phase yet.
 
 To train a network in TensorFlow we need a \texttt{tf.Variable}. A
@@ -455,7 +455,7 @@ library without knowing TensorFlow is not easy.
 To generate adversarial examples for a given model, CleverHans needs to
 be able to read some internals of the model --- inputs are generated in
 a white-box approach. CleverHans already provides a couple of utilities
-to do that \emph{model inspection} --- e.g. for Keras there's a
+to do that \emph{model inspection} --- e.g. for Keras there is a
 \texttt{KerasModelWrapper}
 --- transforming the model into an object that CleverHans is able to
 handle. Once a model has the interface expected by CleverHans, it's

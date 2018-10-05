@@ -106,7 +106,7 @@ depends on the learning rate $\gamma$) in the \emph{opposite}
 direction. That is, the procedure identifies where the loss functions
 is growing to perform a step towards a minimum instead. The minimum is
 of course local --- it depends on where the procedure starts --- and
-there's no guarantee that the algorithm will succeed in finding the
+there is no guarantee that the algorithm will succeed in finding the
 best of these minima.
 
 This algorithm has nothing to do specifically with linear regression.
@@ -197,7 +197,7 @@ to assign that input to the correct class.
 To understand how neural networks are used to perform classification it
 is useful to know the concept of one-hot encoding of data. In one-hot
 encoding possible values are binary numbers, that are legal only if
-there's only one 1 --- e.g. 0001, 1000, ... but not 1001 or 1100.
+there is only one 1 --- e.g. 0001, 1000, ... but not 1001 or 1100.
 
 One-hot encoding is used to map classes (cat, dog, mockingbird, etc.)
 in the training set to \emph{states} of the output neurons in the
@@ -252,7 +252,7 @@ easily dangerous.
 There are different techniques to generate these adversarial examples.
 One of the most notable one is called fast gradient sign and has been
 introduced by Goodfellow, et al. in \cite{goodfellow6572explaining}.
-There's no need to know much about this attack as many libraries
+There is no need to know much about this attack as many libraries
 already implements this technique --- see \ref{sec:cleverhans}. In fact
 we used the attack \emph{as a service} without knowing too much of the
 details.
