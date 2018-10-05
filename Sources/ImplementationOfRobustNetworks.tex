@@ -213,9 +213,9 @@ and we abandoned retraining.
 For this reason in the following sections we will talk only about models
 with filtering techniques deployed using reconstruction.
 
-\section{Filters better than PCA}
+\section{Better than PCA filters}
 
-In this chapter we will test a couple of image filters against
+In this section we will test a couple of image filters against
 adversarial input. The intuition behind the idea of filtering the image
 is that to forge an adversarial input the attacker will try to put some
 noise distributed in the image. Trying to be stealthy, the noise will be
@@ -319,8 +319,6 @@ score --- that is, the probability of success for the attacker --- of
 to which the filtering technique is destructive. Yet as we try to stop the
 attacker we have to reduce the accuracy of the model as well.
 
-\section{Decompositions}
-
 When it comes to testing various filtering techniques we had two
 choices: implementing them from scratch using TensorFlow --- as we did
 at first with PCA --- or we could leverage the \texttt{decomposition}
@@ -383,9 +381,6 @@ inverse function.
 Once transformers have been fitted we can add them as a preprocessing
 layer in the models in a \emph{reconstruction} fashion --- as explained
 in Section \ref{sec:deploying-a-filtering-technique}.
-
-\section{Better than PCA}
-\label{sec:better-than-pca}
 
 Now we are ready to answer the question that motivated the thesis ---
 see Chapter \ref{ch:background}. That is, we started from the work in
