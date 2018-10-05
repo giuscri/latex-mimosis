@@ -12,9 +12,62 @@ graph; Section \ref{sec:keras} is for Keras, a high-level API for
 TensorFlow; Section \ref{sec:cleverhans} describes CleverHans, a
 library to generate adversarial examples; Section \ref{sec:sklearn}
 talks about Scikit-learn, a library for building and training Machine
-Learning models, while Section \ref{sec:google-cloud-platform} briefly
-mentions Google Cloud Platform, a service by Google that allows you to
-buy computational power to run your own code.
+Learning models.
+
+\begin{figure}
+  \centering
+  \begin{tabular}{|c|c|}
+    \hline
+    CPU platform & Intel Haswell \\
+    \hline
+    memory & 60 GB \\
+    \hline
+    vCPUs & 16 \\
+    \hline
+    GPU & 1 x NVIDIA Tesla P100 \\
+    \hline
+  \end{tabular}
+  \caption{Information of the machine used via GCP.}
+  \label{fig:expensive-machine}
+\end{figure}
+
+\begin{figure}
+  \begin{minted}{text}
+  [g@x220 ~]$ gcloud compute ssh root@bowser -- -X
+  No zone specified. Using zone [us-east1-b] for instance: [bowser].
+  Welcome to Ubuntu 16.04.5 LTS (GNU/Linux 4.15.0-1014-gcp x86_64)
+
+  * Documentation:  https://help.ubuntu.com
+  * Management:     https://landscape.canonical.com
+  * Support:        https://ubuntu.com/advantage
+
+    Get cloud support with Ubuntu Advantage Cloud Guest:
+      http://www.ubuntu.com/business/services/cloud
+
+  0 packages can be updated.
+  0 updates are security updates.
+
+
+  Last login: Thu Sep 27 15:35:52 2018 from 79.24.139.192
+  root@bowser:~# 
+  \end{minted}
+  \caption{Using \texttt{gcloud} to connect via ssh to Google remote
+    \emph{machine}}
+  \label{fig:ssh-to-gcp}
+\end{figure}
+
+All the tools described in this chapter and the code written to run the
+experiments has been installed not on our local machine but to remote
+machine using Google Cloud Platform. Google Cloud Platform (GCP) is a
+set of services that allows people to buy computational power from
+Google. In our case, we used GCP to get access to a GPU for few dollars
+a
+month\footnote{https://cloud.google.com/blog/products/gcp/introducing-improved-pricing-for-preemptible-gpus}.
+Since we had \$300 of free credit we chose an expensive machine type as
+described in Figure \ref{fig:expensive-machine}. We installed Debian on
+that machine and controlled it using a shell via ssh --- see Figure
+\ref{fig:ssh-to-gcp}. This made running experiments a lot faster in
+many cases.
 
 \section{TensorFlow}
 \label{sec:tensorflow}
@@ -334,7 +387,7 @@ Learning models using a simple API that abstracts away the interface of
 a backend of choice, e.g. TensorFlow. When you use the library, you're
 encouraged to manipulate \emph{layers} instead of plain tensors. In
 fact the whole concept of \emph{tensors} is hidden away by the library.
-To implement your model you're expected to stack layers one on top the
+To implement your model you're expected to stack layers one on top of the
 other, expressing a \emph{sequential} manipulation of the
 data\footnote{https://keras.io/\#getting-started-30-seconds-to-keras}.
 Under the hood, a \texttt{Layer} is simply a callable object whose
@@ -360,7 +413,8 @@ the softmax function. Compare that to the TensorFlow implementation we
 did in Section \ref{sec:tensorflow} and you'll realize how much easier
 is to read it and to think about it.
 
-This nicer API that allows to immediately think about model's
+This nicer API that allows to immediately think about the architecture
+of the model
 architecture has the cost of an abstraction level that at the time of
 this writing in our opinion is not enough stable to allow programmers
 to be completely oblivious of the original backend --- in my case
@@ -375,7 +429,7 @@ Pennsylvania State University. It implements a variety of
 attacks\footnote{https://cleverhans.readthedocs.io/en/latest/source/attacks.html}
 including fast gradient sign (see Chapter \ref{ch:background})
 against neural networks and it's compatible with models built with
-Keras or just plain TensorFlow. It leverages the computational graphs
+Keras or just using plain TensorFlow. It leverages the computational graphs
 of TensorFlow to generate adversarial examples, so using the
 library without knowing TensorFlow is not easy.
 
@@ -389,42 +443,47 @@ library without knowing TensorFlow is not easy.
   attack = FastGradientMethod(cleverhans_model)
 
   example_sym = attack.generate(model.input, **kwargs)
-  # example_sym will give the adversarial examples
-  # when run in a session.
+  # example_sym will give an adversarial example
+  # when run in a session. Note that usually they are
+  # more than just one. In fact `model.input` typically
+  # represents a batch of data, not a single element.
   \end{minted}
   \caption{Generating adversarial examples using CleverHans}
   \label{fig:cleverhans-attack-dot-generate}
 \end{figure}
 
-To generate adversarial examples for a given model CleverHans needs to
+To generate adversarial examples for a given model, CleverHans needs to
 be able to read some internals of the model --- inputs are generated in
 a white-box approach. CleverHans already provides a couple of utilities
 to do that \emph{model inspection} --- e.g. for Keras there's a
-\texttt{KerasModelWrapper}\footnote{https://github.com/tensorflow/cleverhans/blob/66125be/cleverhans/utils\_keras.py\#L101}
+\texttt{KerasModelWrapper}
 --- transforming the model into an object that CleverHans is able to
-handle. Once a model has the interface CleverHans expects, it's
+handle. Once a model has the interface expected by CleverHans, it's
 possible to choose the attack technique via classes inhereting from the
-same \texttt{Attack} class. They are all exposing a \texttt{generate}
+base \texttt{Attack} class. They are all exposing a \texttt{generate}
 method that will return a node of the corresponding computational
 graph; when you run it in a session it will return the related
-adversarial examples. See Figure
+adversarial example. See Figure
 \ref{fig:cleverhans-attack-dot-generate} for a short example.
 
 \section{Scikit-learn}
 \label{sec:sklearn}
 
-scikit-learn is a Python library written by David Cournapeau providing
-a number of models, learning algorithms and data manipulation utilities
+scikit-learn is a Python library initially written by David Cournapeau
+as his Google Summer of Code project, later rewritten by people at
+INRIA. It provides learning algorithms and data manipulation utilities
 for Machine Learning. It's pretty popular for fast prototyping as it
 uses a simple and consistent API, with the ability to handle numpy
-arrays or even Python lists --- instead of having to learn about the
-computational graph.
+arrays or even Python lists --- instead of having to learn about
+computational graphs.
 
-We have used scikit-learn to reuse a couple of decomposition
-algorithms\footnote{http://scikit-learn.org/0.20/modules/classes.html\#module-sklearn.decomposition}
-without having to implement them. This required a bit of thinking as
-while Keras and TensorFlow use a lot the computational graph,
-scikit-learn is completely oblivious of that structure.
+We have used scikit-learn to reuse a couple of decomposition algorithms
+without having to implement them. These algorithms are used to derive
+the image filters described in Chapter
+\ref{ch:implementing-robust-networks} and partially described in
+\ref{ch:background}. This required a bit of thinking, as while Keras
+and TensorFlow use a lot the computational graph, scikit-learn is
+completely oblivious of that structure.
 
 \begin{figure}
   \begin{minted}[linenos]{python}
@@ -445,54 +504,3 @@ leveraging classes exposing both a \texttt{transform(X)} and a
 \texttt{inverse\_trasform(X)}. This way I built \emph{filters} that
 \emph{reduced} the amount of information in the original data. See
 Figure \ref{fig:transform-inverse_transform}.
-
-\section{Google Cloud Platform}
-\label{sec:google-cloud-platform}
-
-\begin{figure}
-  \centering
-  \begin{tabular}{|c|c|}
-    \hline
-    CPU platform & Intel Haswell \\
-    \hline
-    memory & 60 GB \\
-    \hline
-    vCPUs & 16 \\
-    \hline
-    GPU & 1 x NVIDIA Tesla P100 \\
-    \hline
-  \end{tabular}
-  \caption{Information of the machine used via GCP.}
-  \label{fig:expensive-machine}
-\end{figure}
-
-Google Cloud Platform is a set of services that allows people to buy
-computational power from Google. In our case, we used GCP to get access
-to a GPU for few dollars a
-month\footnote{https://cloud.google.com/blog/products/gcp/introducing-improved-pricing-for-preemptible-gpus}.
-Since we had \$300 of free credit we chose an expensive machine type as
-described in Figure \ref{fig:expensive-machine}. That made running
-experiments a lot faster in many cases.
-
-\begin{figure}
-  \begin{minted}{text}
-  [g@x220 ~]$ gcloud compute ssh root@bowser -- -X
-  No zone specified. Using zone [us-east1-b] for instance: [bowser].
-  Welcome to Ubuntu 16.04.5 LTS (GNU/Linux 4.15.0-1014-gcp x86_64)
-
-  * Documentation:  https://help.ubuntu.com
-  * Management:     https://landscape.canonical.com
-  * Support:        https://ubuntu.com/advantage
-
-    Get cloud support with Ubuntu Advantage Cloud Guest:
-      http://www.ubuntu.com/business/services/cloud
-
-  0 packages can be updated.
-  0 updates are security updates.
-
-
-  Last login: Thu Sep 27 15:35:52 2018 from 79.24.139.192
-  root@bowser:~# 
-  \end{minted}
-  \caption{Using \texttt{gcloud} to connect via ssh to Google remote \emph{machine}}
-\end{figure}

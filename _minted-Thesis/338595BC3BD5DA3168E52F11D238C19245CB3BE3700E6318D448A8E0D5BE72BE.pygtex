@@ -7,6 +7,8 @@
   \PYG{n}{attack} \PYG{o}{=} \PYG{n}{FastGradientMethod}\PYG{p}{(}\PYG{n}{cleverhans\PYGZus{}model}\PYG{p}{)}
 
   \PYG{n}{example\PYGZus{}sym} \PYG{o}{=} \PYG{n}{attack}\PYG{o}{.}\PYG{n}{generate}\PYG{p}{(}\PYG{n}{model}\PYG{o}{.}\PYG{n}{input}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
-  \PYG{c+c1}{\PYGZsh{} example\PYGZus{}sym will give the adversarial examples}
-  \PYG{c+c1}{\PYGZsh{} when run in a session.}
+  \PYG{c+c1}{\PYGZsh{} example\PYGZus{}sym will give an adversarial example}
+  \PYG{c+c1}{\PYGZsh{} when run in a session. Note that usually they are}
+  \PYG{c+c1}{\PYGZsh{} more than just one. In fact `model.input` typically}
+  \PYG{c+c1}{\PYGZsh{} represents a batch of data, not a single element.}
 \end{Verbatim}
