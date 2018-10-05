@@ -4,7 +4,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In this chapter we describe the experiments that I did during my thesis
-work. See Chapter \ref{ch:background} for a rationale of what we're
+work. See Chapter \ref{ch:background} for a rationale of what we are
 going to. Section \ref{sec:number-of-epochs}
 is dedicated to how the models have been trained and how the number of
 epochs of training has been chosen, Section
@@ -56,7 +56,7 @@ Now, the heuristics we chose were:
 \end{enumerate}
 
 Note that both the heuristics wait after a ``specified number of
-epochs" to make their decision. We're calling this value the
+epochs" to make their decision. We are calling this value the
 \emph{patience}, as that's the amount of \emph{time} the heuristic take
 before making its final decision.
 
@@ -69,7 +69,7 @@ stop training. Throughout the codebase we called this setting training
 the model for a number of epochs equals to -1.
 
 The model used is a feedforward network of two layers of 100 hidden
-neurons each and ten output neurons. I'm going to call it
+neurons each and ten output neurons. We are going to call it
 \texttt{fc-100-100-10} for obvious reason throughout the rest of the
 document. In \cite{bhagoji2018enhancing}, Princeton researchers trained
 that model for 500 epochs achieving an accuracy of circa 97.5\%. That's our
@@ -205,7 +205,7 @@ with filter techniques deployed using reconstruction.
 
 \section{Filters better than PCA}
 
-In this chapter we'll test a couple of image filters against
+In this chapter we will test a couple of image filters against
 adversarial input. The intuition behind the idea of filtering the image
 is that to forge an adversarial input the attacker will try to put some
 noise distributed in the image. Trying to be stealthy the noise will be
@@ -220,7 +220,7 @@ The idea is taken from \cite{bhagoji2018enhancing} in which a \emph{PCA
 its inverse, as explained in Section \ref{sec:sklearn}) is applied to
 the input of a feedforward neural network aiming to reduce the
 probability of success for an attacker forging adversarial examples
-against the model. We'll take this idea further by using a
+against the model. We will take this idea further by using a
 decomposition technique other than PCA: hopefully other filters will
 work better.
 
@@ -378,7 +378,7 @@ in Section \ref{sec:deploying-a-filtering-technique}.
 
 \section{Better than PCA}
 
-Now we're ready to answer the question that motivated the thesis ---
+Now we are ready to answer the question that motivated the thesis ---
 see Chapter \ref{ch:background}. That is, we started from the work in
 \cite{bhagoji2018enhancing} where a PCA filtering technique has been
 proposed as a defense against adversarial examples. We want to find out

@@ -121,7 +121,7 @@ using an API for the Python language. A perhaps interesting example of
 the kind of computation one can express in TensorFlow using Python
 would the implementation of a neural network. Figure
 \ref{fig:neural-network} graphically represents the network
-we're going to implement: a simple feedforward network of four input
+we are going to implement: a simple feedforward network of four input
 neurons and four output neurons. As explained in Chapter
 \ref{ch:background}, each layer in a feedforward neural network performs
 a linear operation on its input and apply an activation function on
@@ -265,7 +265,7 @@ explained in Chapter \ref{ch:background}, a training set consists of a
 bunch of data and a label associated to each input, representing the
 class of that data. As \emph{training} basically means minimizing a
 loss function, we need that function: as in Figure
-\ref{fig:cross-entropy}, we're using the cross-entropy function.
+\ref{fig:cross-entropy}, we are using the cross-entropy function.
 Cross-entropy is defined as
 
 \[ H(p, q) = - \sum_i {p_i \, \log{q_i}} \]
@@ -420,7 +420,7 @@ uses a simple and consistent API, with the ability to handle numpy
 arrays or even Python lists --- instead of having to learn about the
 computational graph.
 
-We've used scikit-learn to reuse a couple of decomposition
+We have used scikit-learn to reuse a couple of decomposition
 algorithms\footnote{http://scikit-learn.org/0.20/modules/classes.html\#module-sklearn.decomposition}
 without having to implement them. This required a bit of thinking as
 while Keras and TensorFlow use a lot the computational graph,
