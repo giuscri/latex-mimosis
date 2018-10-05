@@ -5,7 +5,7 @@
 
 In this chapter we describe the experiments that I did during my thesis
 work. See Chapter \ref{ch:background} for a rationale of what we are
-going to. Section \ref{sec:number-of-epochs} is dedicated to describing
+going to. Section \ref{sec:choose-the-number-of-epochs} is dedicated to describing
 how the models have been trained and how the number of epochs of
 training has been chosen, Section
 \ref{sec:deploying-a-filtering-technique} talks about the choice and
@@ -15,8 +15,8 @@ of the different filtering techniques, in order to find which is the
 one that ended up to perform better as a defense against adversarial
 examples.
 
-\section{Number of epochs}
-\label{sec:number-of-epochs}
+\section{Choose the number of epochs}
+\label{sec:choose-the-number-of-epochs}
 
 As we started to test the performance of various setups, we were
 basically generating a lot of different models that had to be trained
@@ -85,22 +85,19 @@ setting the value of the boolean \texttt{self.model.stop\_training}, the
 callback can stop training \emph{before} the number of epochs the model
 was training for.
 
-\subsection{Early stopping heuristic}
-This heuristic is already implemented by Keras as a callback to the
+The early stopping heuristic is already implemented by Keras as a callback to the
 learning phase\footnote{https://keras.io/callbacks/\#earlystopping}. It
 checks if over the patience period a chosen metric has stopped improving. If
 that happens, we deduce the model stopped training. We set a patience of
 60 epochs, as on our Google Cloud Platform machine 60 epochs corresponds
 to a whole minute.
 
-\subsection{Stop on stable weights heuristic}
-We implemented this heuristic from scratch. After data on model weights
-have been collected, we take the weight that has the largest standard
-deviation over the patience. If that standard deviation is below a
-certain threshold, according to the heuristic the model has stopped
-learning as is considered stable. Again, we set a patience period of 60 epochs.
-
-\subsection{Data obtained}
+The second heuristic, stop on stable weights, has been implemented from
+scratch. After data on model weights have been collected, we take the
+weight that has the largest standard deviation over the patience. If
+that standard deviation is below a certain threshold, according to the
+heuristic the model has stopped learning as is considered stable.
+Again, we set a patience period of 60 epochs.
 
 \begin{figure}
   \centering
@@ -187,7 +184,7 @@ filtering technique using both reconstruction and retraining. Changing
 the number of components retained (see Chapter \ref{ch:background}) we
 obtained dozens of models and trained all them leveraging the
 heuristics described in Section
-\ref{sec:number-of-epochs}.
+\ref{sec:choose-the-number-of-epochs}.
 
 We attacked each model using the fast gradient sign technique (see
 Chapter \ref{ch:background}) obtaining what was the adversarial success
