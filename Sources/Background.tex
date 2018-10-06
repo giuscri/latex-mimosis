@@ -4,8 +4,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Machine Learning popularity exploded in last years. If you work in tech
-it's hard you didn't hear about large public datasets, neural
-networks, deep learning, or just how people speculates a majority of
+it is hard you did not hear about large public datasets, neural
+networks, deep learning, or just how people speculate a majority of
 jobs will be substitued by machine trained from data.
 
 Apart from a noisy hype, many services are actually built using Machine
@@ -19,13 +19,13 @@ work\footnote{https://www.ft.com/content/4f82a008-0096-11e8-9650-9c0ad2d7c5b5}.
 
 More and more developers are getting interested in this kind of
 technology and as more people work on these topics, more people build
-better tools, empoweing larger majorities of developers to write
+better tools, empoweing larger groups of developers to write
 services using Machine Learning.
 
 This chapter is organized as follows: Section
 \ref{sec:machine-learning} is about what is Machine Learning and the
 gradient descent procedure; in Section \ref{sec:neural-networks} we will
-describe Neural Networks, a classifier that's used with great success
+describe Neural Networks, a classifier that is used with great success
 in recent times; Section \ref{sec:adversarial-examples} explains what
 are adversarial examples and how they are generated.
 
@@ -71,14 +71,14 @@ best values for $w^*$ and $b^*$ such that $y^*$ defined as
 is the closest possible to the associated value of $x$.
 
 When both $x$ and $y$ are scalar, the problem of finding the best
-values for $w$ and $b$ becomes the problem of finding the best line
-that's \emph{close} to all the data --- see Figure
+values $w^*$ and $b^*$ becomes the problem of finding the best line
+that is the \emph{closest} to all the data --- see Figure
 \ref{fig:wikipedia-linear-regression}.
 
 You don't know which are the \emph{correct} values for the weight and
 the bias so you either estimate them using analytical methods like the ones
 you probably learned in some math course or you derive the two values
-using a data-based procedure that minimizes the data minimizes the
+using a data-based procedure that minimizes the
 distance between the expected and the actual value of $y$.
 
 The function that computes the distance is generally called the
@@ -110,7 +110,7 @@ there is no guarantee that the algorithm will succeed in finding the
 best of these minima.
 
 This algorithm has nothing to do specifically with linear regression.
-It's a general minimization algorithm. In fact, later in the thesis
+It is a general minimization algorithm. In fact, later in the thesis
 we will use it even if we will never touch the topic of linear regression
 again.
 
@@ -157,7 +157,7 @@ function. That is, each neuron computes
 
 \[ \text{activation}(l \, W + b) \]
 
-where $l$ is the state of the previous layer, while $w$ and $b$
+where $l$ is the state of the previous layer, while $W$ and $b$
 represents the state of the neuron that changes as the model is
 trained. The activation function can be any non-linear function; one of
 the simplest one is called the rectifier
@@ -170,12 +170,12 @@ Having several hidden layers of different width can improve the
 performance of the model. When the network consists of many layers, the
 network is referred to be a \emph{deep} neural network. As a rule of
 thumb, the more the layers the better the performance of the model.
-Yet, that's not always the case \emph{and} the deeper the network, the
+Yet, that is not always the case \emph{and} the deeper the network, the
 longer it takes to train that model.
 
 In fact, deep learning is not a new idea and many consider the recent
 interest in neural networks as a consequence of the current available
-computational power that wasn't there in the 20th century.
+computational power that was not there in the 20th century.
 
 \begin{quote}
   Advances in hardware enabled the renewed interest. In 2009, Nvidia
@@ -212,7 +212,7 @@ configuration of the output neurons (the class of the input example
 one-hot encoded), and the network is \emph{confronted} with the
 configuration of the output it obtains using its current weights and biases
 in the hidden layers and \emph{tries} to reduce this distance. Of
-course, it's the gradient descent procedure that does this job: the
+course, it is the gradient descent procedure that does this job: the
 network is actually a \emph{passive} object.
 
 \section{Adversarial examples}
@@ -237,10 +237,10 @@ generated inputs are called \emph{adversarial examples}.
 \end{figure}
 
 Countrary to one might expect, for a human eye, an adversarial example
-are indistinguishable from the input that originated it. In Figure
+is indistinguishable from the input that originated it. In Figure
 \ref{fig:panda-gibbon} we can see that the image classified as being
-the one of a gibbon is actually identical (not exactly of course) to
-the panda picture. That's why adversarial examples are a topic of
+the one of a gibbon is pretty identical (but they are not of course) to
+the panda picture. That is why adversarial examples are a topic of
 interest for researchers: they make machine learning models behave in
 ways that diverge from their expected behaviour --- in ways human
 \emph{fail to predict}.
@@ -251,10 +251,8 @@ easily dangerous.
 
 There are different techniques to generate these adversarial examples.
 One of the most notable one is called fast gradient sign and has been
-introduced by Goodfellow, et al. in \cite{goodfellow6572explaining}.
+introduced by Goodfellow, et al. \cite{goodfellow6572explaining}.
 There is no need to know much about this attack as many libraries
 already implements this technique --- see \ref{sec:cleverhans}. In fact
 we used the attack \emph{as a service} without knowing too much of the
 details.
-
-\section{...}

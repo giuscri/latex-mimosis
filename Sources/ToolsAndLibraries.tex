@@ -57,7 +57,7 @@ Learning models.
 \end{figure}
 
 All the tools described in this chapter and the code written to run the
-experiments has been installed not on our local machine but to remote
+experiments has been installed not on our local machine but to a remote
 machine using Google Cloud Platform. Google Cloud Platform (GCP) is a
 set of services that allows people to buy computational power from
 Google. In our case, we used GCP to get access to a GPU for few dollars
@@ -100,7 +100,7 @@ to other nodes, letting \emph{tensors} (the object that you manipulate
 in TensorFlow) \emph{flow} around this
 graph (in case of Figure \ref{fig:fortytwo}, the tensor is the output
 of the only one node in the graph: the tensor is 42). Problem is that,
-in general, it's hard to
+in general, it is hard to
 determine beforehand what is going to be the value of a tensor, that is the
 \emph{output} of the computational graph. This is slowing down
 exploratory analysis.
@@ -129,7 +129,7 @@ images (which is a 4D vector\footnote{If you always thought humans
 edges represent tensors.
 
 For example, Figure \ref{fig:easy-graph} shows a very simple
-computational graph. It's the one associated to an addition of two
+computational graph. It is the one associated to an addition of two
 \emph{numerical} tensors (two tensors made of numbers: two
 \texttt{tf.float32}, two \texttt{tf.int64}, etc.): the first two nodes
 \texttt{a} and \texttt{b} output one tensor each; those are used to
@@ -173,12 +173,11 @@ The most commonly used way to program the computational graph is by
 using an API for the Python language. A perhaps interesting example of
 the kind of computation one can express in TensorFlow using Python
 would the implementation of a neural network. Figure
-\ref{fig:neural-network} graphically represents the network
-we are going to implement: a simple feedforward network of four input
-neurons and four output neurons. As explained in Chapter
-\ref{ch:background}, each layer in a feedforward neural network performs
-a linear operation on its input and apply an activation function on
-that result. That is, it computes
+\ref{fig:neural-network} graphically represents the network we are
+going to implement: a simple feedforward network of four input neurons
+and four output neurons. Each layer in a feedforward neural network
+performs a linear operation on its input and apply an activation
+function on that result. That is, it computes
 
 \[ \text{activation}(X * W + b) \]
 
@@ -206,14 +205,14 @@ To get an idea of how to do that in TensorFlow see Figure
 \ref{fig:tensorflow-feedforward}, where $W$ and $b$ are initialized
 drawing values from a standard normal distribution. Note that
 \texttt{X} is a \emph{placeholder}: it is a TensorFlow way to make room
-in the graph for something whose value will be provided later. In
+in the graph for something whose value will be provided later --- using
+a \texttt{feed\_dict}. In
 Figure \ref{fig:tensorflow-feedforward} that function is applied to the
 \emph{logit}\footnote{https://datascience.stackexchange.com/a/31045/50780},
-i.e. the output of the matrix multiplication. As explained in Chapter
-\ref{ch:background} this is done for various reasons but one of the
-simplest ones is that it squashes the output of the network in $[0,1]$
-allowing to interpret it in terms of confidence levels --- see Chapter
-\ref{ch:background}.
+i.e. the output of the matrix multiplication. This is done for various
+reasons but one of the simplest ones is that it squashes the output of
+the network in $[0,1]$ allowing to interpret it in terms of percentages
+of confidence levels.
 
 \begin{figure}
   \begin{minted}{python}
@@ -260,7 +259,7 @@ allowing to interpret it in terms of confidence levels --- see Chapter
   \label{fig:making-variables}
 \end{figure}
 
-Now, to get results out of the graph you need what's called a
+Now, to get results out of the graph you need what is called a
 \emph{session} in TensorFlow. Basically, a session \emph{powers on} the
 graph, allowing you to run the computational graph with your own data
 and get actual tensors of actual numbers out of it. Of course building
@@ -313,11 +312,10 @@ TensorFlow you can just wrap those tensors.
 \end{figure}
 
 The last thing we want to do before abandoning this example is the
-actual training. To perform training we need a training set. As
-explained in Chapter \ref{ch:background}, a training set consists of a
-bunch of data and a label associated to each input, representing the
-class of that data. As \emph{training} basically means minimizing a
-loss function, we need that function: as in Figure
+actual training. To perform training we need a training set. A training
+set consists of a bunch of data and a label associated to each input,
+representing the class of that data. As \emph{training} basically means
+minimizing a loss function, we need that function: as in Figure
 \ref{fig:cross-entropy}, we are using the cross-entropy function.
 Cross-entropy is defined as
 
@@ -327,7 +325,7 @@ where $p$ and $q$ are two probability distributions. In our case, $p$
 is the \emph{probability} distribution for an input (the classifier's
 confidence levels, the output of a neural network if the model is a
 neural network), and $q$ is the one-hot encoding of the actual class of
-the input (which looks and it's in fact used here as a probability
+the input (which looks and it is in fact used here as a probability
 distribution).
 
 \begin{figure}
@@ -427,11 +425,11 @@ CleverHans\footnote{https://www.cleverhans.io/} is a library for
 building adversarial examples written by Google, OpenAI and
 Pennsylvania State University. It implements a variety of
 attacks\footnote{https://cleverhans.readthedocs.io/en/latest/source/attacks.html}
-including fast gradient sign (see Chapter \ref{ch:background})
-against neural networks and it's compatible with models built with
-Keras or just using plain TensorFlow. It leverages the computational graphs
-of TensorFlow to generate adversarial examples, so using the
-library without knowing TensorFlow is not easy.
+including fast gradient sign against neural networks and it is
+compatible with models built with Keras or just using plain TensorFlow.
+It leverages the computational graphs of TensorFlow to generate
+adversarial examples, so using the library without knowing TensorFlow
+is not easy.
 
 \begin{figure}
   \begin{minted}[linenos]{python}
@@ -454,16 +452,16 @@ library without knowing TensorFlow is not easy.
 
 To generate adversarial examples for a given model, CleverHans needs to
 be able to read some internals of the model --- inputs are generated in
-a white-box approach. CleverHans already provides a couple of utilities
-to do that \emph{model inspection} --- e.g. for Keras there is a
-\texttt{KerasModelWrapper}
---- transforming the model into an object that CleverHans is able to
-handle. Once a model has the interface expected by CleverHans, it's
-possible to choose the attack technique via classes inhereting from the
-base \texttt{Attack} class. They are all exposing a \texttt{generate}
-method that will return a node of the corresponding computational
-graph; when you run it in a session it will return the related
-adversarial example. See Figure
+a \emph{white-box} approach, i.e. CleverHans can exploit elements that
+are specific to the model under attack. CleverHans already provides a
+couple of utilities to do that \emph{model inspection} --- e.g. for
+Keras there is a \texttt{KerasModelWrapper} --- transforming the model
+into an object that CleverHans is able to handle. Once a model has the
+interface expected by CleverHans, it is possible to choose the attack
+technique via classes inhereting from the base \texttt{Attack} class.
+They are all exposing a \texttt{generate} method that will return a
+node of the corresponding computational graph; when you run it in a
+session it will return the related adversarial example. See Figure
 \ref{fig:cleverhans-attack-dot-generate} for a short example.
 
 In our codebase used to run experiments, we wrapped CleverHans
@@ -477,8 +475,8 @@ As CleverHans generates a computational graph each time you call the
 computational graphs for each time you needed an adversarial example.
 We tried that for a while, but soon we discovered that performance
 degraded over time up to the point of triggering some memory errors. In
-fact, the computational graph is never gargabe collected: it's an
-append only structure.
+fact, the computational graph is never gargabe collected: it is an
+append-only structure.
 
 \begin{figure}
   \begin{minted}[linenos]{python}
@@ -541,7 +539,7 @@ to use those symbols. Then we decorated the first function with
 scikit-learn is a Python library initially written by David Cournapeau
 as his Google Summer of Code project, later rewritten by people at
 INRIA. It provides learning algorithms and data manipulation utilities
-for Machine Learning. It's pretty popular for fast prototyping as it
+for Machine Learning. It is pretty popular for fast prototyping as it
 uses a simple and consistent API, with the ability to handle numpy
 arrays or even Python lists --- instead of having to learn about
 computational graphs.
@@ -576,10 +574,9 @@ def filtered_model(model, X_train, sklearn_transformer=None):
 We have used scikit-learn to reuse a couple of decomposition algorithms
 without having to implement them (see Figure \ref{fig:sklearn-code}).
 These algorithms are used to derive the image filters described in
-Chapter \ref{ch:implementation-of-robust-networks} and partially
-described in \ref{ch:background}. This required a bit of thinking, as
-while Keras and TensorFlow use a lot the computational graph,
-scikit-learn is completely oblivious of that structure.
+Chapter \ref{ch:implementation-of-robust-networks}. This required a bit
+of thinking, as while Keras and TensorFlow use a lot the computational
+graph, scikit-learn is completely oblivious of that structure.
 
 \begin{figure}
   \begin{minted}[linenos]{python}
