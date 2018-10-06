@@ -15,7 +15,7 @@ to you musical
 taste\footnote{https://support.spotify.com/us/article/daily-mix/}, or
 just how YouTube gives you suggestions specifically for you
 \cite{45530} --- even when you should do more serious
-work\footnote{https://www.ft.com/content/4f82a008-0096-11e8-9650-9c0ad2d7c5b5}.
+work\footnote{``Why quitting smartphones is the new quitting smoking'' https://www.ft.com/content/4f82a008-0096-11e8-9650-9c0ad2d7c5b5}.
 
 More and more developers are getting interested in this kind of
 technology and as more people work on these topics, more people build
@@ -54,7 +54,6 @@ A typical example to introduce people with some scientific preparation
 to this topic is the one of linear regression \cite{B071JXYDDB}. In
 linear regression you have data coming in pairs $(x, y)$ and you think
 that $y$ can be linearly dependent on $x$. That is, your hypothesis is
-that
 
 \begin{equation}
   y = w x + b
@@ -64,19 +63,19 @@ that
 where $w$ and $b$ are called the weight and the bias
 respectively\footnote{In other fields, $w$ and $b$ are more commonly
   known as the slope and the intercept.}. The problem is to find the
-best values for $w^*$ and $b^*$ such that $y^*$ defined as
+best values $w^*$ and $b^*$ such that $y^*$ defined as
 
 \[ y^* = w^* x + b^* \]
 
-is the closest possible to the associated value of $x$.
+is the closest possible to the associated value of $y$.
 
 When both $x$ and $y$ are scalar, the problem of finding the best
 values $w^*$ and $b^*$ becomes the problem of finding the best line
 that is the \emph{closest} to all the data --- see Figure
 \ref{fig:wikipedia-linear-regression}.
 
-You don't know which are the \emph{correct} values for the weight and
-the bias so you either estimate them using analytical methods like the ones
+In general there are no \emph{correct} values for $w^*$ and
+$b^*$ so you either estimate them using analytical methods like the ones
 you probably learned in some math course or you derive the two values
 using a data-based procedure that minimizes the
 distance between the expected and the actual value of $y$.
@@ -101,7 +100,7 @@ $\nabla{F}(\boldsymbol{z}_n)$ is the gradient of the loss function $F$
 evaluated at $\boldsymbol{z}_n$. The idea behind the procedure is that
 the gradient --- that when your model is a line collapses to just
 being the derivative --- is used to find the \emph{direction} in which
-the function is growing; then it does an iterative step (whose size
+the function is growing; then the procedure does an iterative step (whose size
 depends on the learning rate $\gamma$) in the \emph{opposite}
 direction. That is, the procedure identifies where the loss functions
 is growing to perform a step towards a minimum instead. The minimum is
@@ -149,7 +148,7 @@ For example, if the third neuron outputs a value of 0.577, according to
 the model the current input belongs to the third class (the class
 related to the third neuron) with a confidence of 57.7\%.
 
-In between the input and output layer you typically have one or more
+In between the input and output layer, you typically have one or more
 the so-called \emph{hidden} layers. Each hidden layer (as the output
 layer too) computes the composition of a linear function followed by
 the application of a \emph{non}-linear function, called the activation
@@ -198,10 +197,10 @@ is useful to know the concept of one-hot encoding of data. In one-hot
 encoding possible values are binary numbers, that are legal only if
 there is only one 1 --- e.g. 0001, 1000, ... but not 1001 or 1100.
 
-One-hot encoding is used to map classes (cat, dog, mockingbird, etc.)
+One-hot encoding is used to map classes
 in the training set to \emph{states} of the output neurons in the
 neural network. For example, if the classification problem uses three
-classes, cat, dog and mockingbird, a one-hot value will be assigned to
+classes --- cat, dog and mockingbird --- a one-hot value will be assigned to
 each class such to fit the \emph{shape} of the output layer --- that
 is, it will be assigned 100 to the class of cats, 010 to dogs and 001
 to mockingbirds.
@@ -212,7 +211,7 @@ configuration of the output neurons (the class of the input example
 one-hot encoded), and the network is \emph{confronted} with the
 configuration of the output it obtains using its current weights and biases
 in the hidden layers and \emph{tries} to reduce this distance. Of
-course, it is the gradient descent procedure that does this job: the
+course, it is the gradient descent procedure that does the job: the
 network is actually a \emph{passive} object.
 
 \section{Adversarial examples}
@@ -247,10 +246,10 @@ ways that diverge from their expected behaviour --- in ways human
 
 In a near future where machine learning models influence real-life
 decisions --- ``drive straight or stop the car?'' --- this becomes
-easily dangerous.
+easily dangerous\footnote{https://spectrum.ieee.org/cars-that-think/transportation/sensors/slight-street-sign-modifications-can-fool-machine-learning-algorithms}.
 
 There are different techniques to generate these adversarial examples.
-One of the most notable one is called fast gradient sign and has been
+One of the most known one is called \emph{fast gradient sign} and has been
 introduced by Goodfellow, et al. \cite{goodfellow6572explaining}.
 There is no need to know much about this attack as many libraries
 already implements this technique --- see \ref{sec:cleverhans}. In fact

@@ -11,14 +11,14 @@ by crafting new kind of inputs that defeat the state-of-the-art
 defenses. This thesis tries to do a small step in the former direction,
 by trying to measure the performance of a defense technique.
 
-The work that we are using as a starting point is based on is
+The work that we are using as a starting point is
 \cite{bhagoji2018enhancing}. In that paper, researchers use a technique
 called Principal Component Analysis to derive a filter for images. It
 turns out that applying that filter on each image before the
 classification reduces the rate of success for an attacker that
 provides input specifically forged to make the model misclassify it. We
 reproduced those results and swapped Principal Components Analysis with
-other similar dimensionality reductions techniques. The idea is that
+other similar dimensionality reduction techniques. The idea is that
 there is nothing intrinsically special about Principal Components
 Analysis hence maybe other filters are better suited for the task.
 
@@ -29,6 +29,12 @@ Neural Networks and Adversarial Examples. Chapter
 work --- the tools that we used to perform our experiments. Finally,
 Chapter \ref{ch:implementation-of-robust-networks} is about the actual
 experiments and measurements, comparing the performance of a Principal
-Components Analysis filter to the other filters. The thesis finishes
+Components Analysis filter to other filters. The thesis finishes
 with a short conclusion that wraps up the work, talking a bit about the
 experience as a whole.
+
+The thesis source code has been written using \LaTeX and it is hosted
+on Github at
+https://github.com/giuscri/latex-mimosis/tree/my-own-thesis. The code
+used to run the experiments is hosted on GitHub as well at
+https://github.com/giuscri/thesis

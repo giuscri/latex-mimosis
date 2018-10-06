@@ -90,7 +90,7 @@ daunting to use when tinkering. In fact, operations to perform on data
 are first described and executed only at a later time. We believe this
 can be counter-intuitive for most people. For example, during the
 execution of the code shown in Figure \ref{fig:fortytwo}, the variable
-\texttt{symbol} doesn't contain a reference to the integer 42 --- as
+\texttt{symbol} does not contain a reference to the integer 42 --- as
 opposed to what would have been if \texttt{symbol} was an \texttt{int}
 variable. Instead, it contains a reference to a node of a
 \emph{computational graph} (a description of the computation to perform
@@ -348,13 +348,14 @@ over again, as in Figure \ref{fig:training-network}. This will push the
 loss function toward a local minimum; hopefully a useful one, i.e. a
 minimum that corresponds to good results even on data outside the
 training set. Otherwise the model is said to \emph{overfit}. That is,
-the model \emph{fit} so well over the training set that fail generalize
+the model \emph{fit} so well on the training set that fail generalize
 to the whole input space. For example, in Figure
 \ref{fig:wikipedia-overfitting} we have plotted two classifiers: one
 drawn as a green curve, the other as a black curve. The \emph{green}
 model has a better accuracy (that is, it has a high rate of correct
 classifications) on the training set, but its characteristics are
-clearly so much dependent on the set the models has been trained that
+clearly so much dependent on the training set the models has been
+trained on that
 it will almost surely fail to keep that high accuracy on data outside
 the training set --- while the \emph{black} model has a higher
 probability to be a good model.
@@ -382,10 +383,10 @@ probability to be a good model.
 
 Keras\footnote{https://keras.io/} is a library for building Machine
 Learning models using a simple API that abstracts away the interface of
-a backend of choice, e.g. TensorFlow. When you use the library, you're
+a backend of choice, e.g. TensorFlow. When you use the library, you are
 encouraged to manipulate \emph{layers} instead of plain tensors. In
 fact the whole concept of \emph{tensors} is hidden away by the library.
-To implement your model you're expected to stack layers one on top of the
+To implement your model you are expected to stack layers one on top of the
 other, expressing a \emph{sequential} manipulation of the
 data\footnote{https://keras.io/\#getting-started-30-seconds-to-keras}.
 Under the hood, a \texttt{Layer} is simply a callable object whose
@@ -408,7 +409,7 @@ simple feedforward neural network of Figure
 \ref{fig:wikipedia-neural-network} one would stack a \texttt{Dense}
 layer of 4 hidden neurons and an \texttt{Activation} layer implementing
 the softmax function. Compare that to the TensorFlow implementation we
-did in Section \ref{sec:tensorflow} and you'll realize how much easier
+did in Section \ref{sec:tensorflow} and you will realize how much easier
 is to read it and to think about it.
 
 This nicer API that allows to immediately think about the architecture

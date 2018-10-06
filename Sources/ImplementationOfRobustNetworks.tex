@@ -56,7 +56,7 @@ Now, the heuristics we chose were:
 
 Note that both heuristics wait after a ``specified number of
 epochs" to make their decision. We are calling this value the
-\emph{patience}, as this is the amount of \emph{time} the heuristic waits
+\emph{patience} period, as this is the amount of \emph{time} the heuristic waits
 before taking its final decision.
 
 To prove that both heuristics work, and to choose the one that
@@ -82,7 +82,7 @@ Both heuristics have been implemented in terms of Keras
 \texttt{on\_epoch\_end} function that is called after each epoch. By
 setting the value of the boolean \texttt{self.model.stop\_training}, the
 callback can stop training \emph{before} the number of epochs the model
-was training for.
+was asked to train for.
 
 The early stopping heuristic is already implemented by Keras as a callback to the
 learning phase\footnote{https://keras.io/callbacks/\#earlystopping}. It
@@ -367,7 +367,7 @@ decomposition techniques implemented in \texttt{sklearn.\-decomposition}
 only half have the inverse function implemented, or defined.
 
 Of course each of these transformers had been \emph{fitted}, as the
-function they compute is dependent on the dataset you're going to use.
+function they compute is dependent on the dataset you are going to use.
 For example, to do PCA filtering on the MNIST dataset you need to fit
 the transformer on the MNIST dataset. This required time and some
 transformers --- namely the KernelPCA --- did not succeeed in fitting,
@@ -410,12 +410,13 @@ to that interval.
     \hline
     97.32\% & IncrementalPCA & -0.02\% & -0.05\% \\
     \hline
-    97.17\% & NMF & -0.8\% & -4.2\% \\
+    97.17\% & NMF & -0.8\% & -4.2\% \
     \hline
     93.8\% & PCA & N/A & N/A \\
     \hline
   \end{tabular}
-  \caption{Comparing filter performances in respect to most similar PCA filter}
+  \caption{Best performing filter technique per accuracy value,
+    compared to best PCA model having similar performance}
   \label{fig:filters-comparison}
 \end{figure}
 
