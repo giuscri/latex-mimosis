@@ -404,24 +404,23 @@ to that interval.
     $\approx$accuracy & filter & accuracy & adversarial score\\
     \hline
     \hline
-    97.39\% & TruncatedSVD & +0.02\% & -11\% \\
+    97.43\% & PCA & N/A & N/A \\
     \hline
     97.36\% & PCA & N/A & N/A \\
     \hline
-    97.32\% & IncrementalPCA & +0.02\% & -0.05\% \\
+    97.32\% & IncrementalPCA & -0.02\% & -0.05\% \\
     \hline
-    97.17\% & NMF & -0.17\% & -1.6\% \\
+    97.17\% & NMF & -0.8\% & -4.2\% \\
     \hline
     93.8\% & PCA & N/A & N/A \\
     \hline
   \end{tabular}
-  \caption{Comparing filter performances in respect to PCA}
+  \caption{Comparing filter performances in respect to most similar PCA filter}
   \label{fig:filters-comparison}
 \end{figure}
 
-What we did find is that it is hard to improve over PCA. The performance
-of the other filters is very similar to the performance of PCA, as
-shown in Figure \ref{fig:filters-comparison}. The only interesting
-improvement is for using TruncatedSVD on a model whose accuracy is of
-circa 97.39\%; in fact, we registered an improvement of 11\% over the
-adversarial score for the same model defended by a PCA filter.
+What we did find is that it is hard to improve over PCA. The
+performances of the other filters are very similar to the performance
+of PCA, as shown in Figure \ref{fig:filters-comparison}. The only
+improvements over the adversarial success score are at the price of
+reducing the overall accuracy.
